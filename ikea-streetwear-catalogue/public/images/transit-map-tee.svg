@@ -1,0 +1,14 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1500" fill="#EEF4FB"/>
+  <rect x="120" y="120" width="960" height="1260" fill="#111111"/>
+  <path d="M250 330H930" stroke="#8CC6FF" stroke-width="22"/>
+  <path d="M250 520H760" stroke="#FFCF3F" stroke-width="22"/>
+  <path d="M420 710H930" stroke="#FFFFFF" stroke-width="22"/>
+  <path d="M320 900H840" stroke="#EF6A4B" stroke-width="22"/>
+  <path d="M360 250V1020" stroke="#FFFFFF" stroke-width="22"/>
+  <path d="M620 250V1020" stroke="#8CC6FF" stroke-width="22"/>
+  <path d="M860 250V1020" stroke="#FFCF3F" stroke-width="22"/>
+  <text x="215" y="1160" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="66" font-weight="700">TRANSIT MAP</text>
+  <text x="215" y="1240" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="66" font-weight="700">TEE</text>
+  <text x="776" y="1248" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="160" font-weight="700">07</text>
+</svg>

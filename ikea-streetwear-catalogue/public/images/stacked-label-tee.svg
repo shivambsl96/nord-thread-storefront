@@ -1,0 +1,11 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1500" fill="#F5F1E7"/>
+  <rect x="170" y="180" width="860" height="260" fill="#111111"/>
+  <rect x="220" y="500" width="760" height="210" fill="#FFCF3F"/>
+  <rect x="170" y="780" width="860" height="180" fill="#FFFFFF" stroke="#111111" stroke-width="6"/>
+  <rect x="220" y="1025" width="760" height="210" fill="#EFEDE4"/>
+  <text x="248" y="340" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="66" font-weight="700">STACKED LABEL</text>
+  <text x="270" y="635" fill="#111111" font-family="Arial, sans-serif" font-size="62" font-weight="700">GRAPHIC TEE</text>
+  <text x="284" y="900" fill="#111111" font-family="Arial, sans-serif" font-size="62" font-weight="700">GARMENT DYED</text>
+  <text x="285" y="1160" fill="#111111" font-family="Arial, sans-serif" font-size="62" font-weight="700">HEAVYWEIGHT</text>
+</svg>

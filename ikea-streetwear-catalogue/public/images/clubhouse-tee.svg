@@ -1,0 +1,9 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1500" fill="#F4F1E7"/>
+  <rect x="130" y="130" width="940" height="1240" fill="#FFFFFF"/>
+  <path d="M600 308L757 380V536C757 682 643 774 600 796C557 774 443 682 443 536V380L600 308Z" fill="#EF6A4B"/>
+  <path d="M600 368L693 411V519C693 620 624 684 600 699C576 684 507 620 507 519V411L600 368Z" fill="#FFFFFF"/>
+  <text x="250" y="1110" fill="#111111" font-family="Arial, sans-serif" font-size="66" font-weight="700">CLUBHOUSE</text>
+  <text x="250" y="1190" fill="#111111" font-family="Arial, sans-serif" font-size="66" font-weight="700">TEE</text>
+  <text x="812" y="1198" fill="#111111" font-family="Arial, sans-serif" font-size="160" font-weight="700">06</text>
+</svg>

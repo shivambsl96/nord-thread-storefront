@@ -1,0 +1,10 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1500" fill="#F2EFE6"/>
+  <rect x="96" y="96" width="1008" height="1308" stroke="#111111" stroke-width="4"/>
+  <rect x="150" y="150" width="900" height="760" fill="#FFCF3F"/>
+  <path d="M264 342H936M264 492H936M264 642H936M420 234V822M600 234V822M780 234V822" stroke="#111111" stroke-width="20"/>
+  <rect x="150" y="986" width="470" height="230" fill="#FFFFFF"/>
+  <text x="200" y="1080" fill="#111111" font-family="Arial, sans-serif" font-size="64" font-weight="700">STUDIO</text>
+  <text x="200" y="1160" fill="#111111" font-family="Arial, sans-serif" font-size="64" font-weight="700">GRID TEE</text>
+  <text x="765" y="1118" fill="#111111" font-family="Arial, sans-serif" font-size="170" font-weight="700">01</text>
+</svg>

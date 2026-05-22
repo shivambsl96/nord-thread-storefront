@@ -1,0 +1,10 @@
+<svg width="1200" height="1500" viewBox="0 0 1200 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1500" fill="#F5F2EA"/>
+  <rect x="120" y="120" width="960" height="1260" fill="#FFFFFF" stroke="#111111" stroke-width="6"/>
+  <rect x="120" y="120" width="960" height="300" fill="#EF6A4B"/>
+  <circle cx="600" cy="710" r="230" fill="#111111"/>
+  <circle cx="600" cy="710" r="150" fill="#FFFFFF"/>
+  <text x="280" y="1088" fill="#111111" font-family="Arial, sans-serif" font-size="66" font-weight="700">SIGNAL LOGO</text>
+  <text x="280" y="1170" fill="#111111" font-family="Arial, sans-serif" font-size="66" font-weight="700">TEE</text>
+  <text x="805" y="1176" fill="#111111" font-family="Arial, sans-serif" font-size="160" font-weight="700">03</text>
+</svg>

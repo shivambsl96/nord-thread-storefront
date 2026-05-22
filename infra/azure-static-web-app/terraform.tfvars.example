@@ -1,0 +1,3 @@
+project_name = "nord-thread"
+environment  = "dev"
+location     = "eastus2"
