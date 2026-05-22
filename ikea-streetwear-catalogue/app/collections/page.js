@@ -7,6 +7,8 @@ export const metadata = {
   description: "Emotional collection and inspiration page for Nord Thread."
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function CollectionsPage() {
   const collections = await getCollections();
 

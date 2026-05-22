@@ -5,6 +5,8 @@ import { ProductCard } from "@/components/product-card";
 import { ProductConfigurator } from "@/components/product-configurator";
 import { getProductBySlug, getProducts, getRelatedProducts } from "@/lib/products";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const products = await getProducts();
   return products.map((product) => ({ slug: product.handle }));

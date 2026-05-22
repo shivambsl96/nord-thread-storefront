@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { getCollectionByHandle, getCollections } from "@/lib/products";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const collections = await getCollections();
   return collections.map((collection) => ({ handle: collection.handle }));

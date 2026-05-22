@@ -3,6 +3,8 @@ import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { getCollections, getFeaturedProducts } from "@/lib/products";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [featuredProducts, collectionCards] = await Promise.all([
     getFeaturedProducts(4),

@@ -86,7 +86,7 @@ const COLLECTION_FRAGMENT = `
   }
 `;
 
-export async function shopifyFetch({ query, variables = {}, cache = "force-cache", tags = [] }) {
+export async function shopifyFetch({ query, variables = {}, cache = "no-store", tags = [] }) {
   const domain = normalizeStoreDomain(process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN);
   const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
   const apiVersion = process.env.NEXT_PUBLIC_SHOPIFY_API_VERSION || DEFAULT_API_VERSION;
@@ -120,7 +120,7 @@ export async function shopifyFetch({ query, variables = {}, cache = "force-cache
       },
       body: JSON.stringify({ query, variables }),
       cache,
-      next: tags.length ? { tags } : undefined
+      next: cache === "no-store" ? undefined : tags.length ? { tags } : undefined
     });
   } catch (error) {
     return { data: null, errors: [{ message: error.message }] };
@@ -178,6 +178,7 @@ export async function getProductByHandle(handle) {
   const response = await shopifyFetch({
     query,
     variables: { handle },
+    cache: "no-store",
     tags: ["products", `product:${handle}`]
   });
 
@@ -201,6 +202,7 @@ export async function getCollections({ first = 12 } = {}) {
   const response = await shopifyFetch({
     query,
     variables: { first },
+    cache: "no-store",
     tags: ["collections"]
   });
 
@@ -228,6 +230,7 @@ export async function getCollectionByHandle(handle, { productsFirst = 24 } = {})
   const response = await shopifyFetch({
     query,
     variables: { handle, productsFirst },
+    cache: "no-store",
     tags: ["collections", `collection:${handle}`]
   });
 
