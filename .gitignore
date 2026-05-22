@@ -14,6 +14,7 @@
 # Terraform local state must not be committed
 **/.terraform/
 **/.terraform.lock.hcl
+!infra/azure-static-web-app/.terraform.lock.hcl
 **/*.tfstate
 **/*.tfstate.*
 **/*.tfvars
