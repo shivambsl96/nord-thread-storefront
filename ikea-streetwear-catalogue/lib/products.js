@@ -20,8 +20,8 @@ export async function getFeaturedProducts(limit = 4) {
   return products.slice(0, limit);
 }
 
-export async function getProductBySlug(slug) {
-  return getCatalogueProductByHandle(slug);
+export async function getProductByHandle(handle) {
+  return getCatalogueProductByHandle(handle);
 }
 
 export async function getRelatedProducts(product, limit = 3) {

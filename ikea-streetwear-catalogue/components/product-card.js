@@ -5,7 +5,7 @@ export function ProductCard({ product, priority = false }) {
   return (
     <article className="group flex h-full flex-col border border-ink/10 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-card">
       <Link
-        href={`/products/${product.slug}`}
+        href={`/products/${product.handle}`}
         className={`relative block overflow-hidden ${getSurfaceClass(product.backgroundTheme)}`}
       >
         <div className="absolute left-4 top-4 z-10 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-ink backdrop-blur-sm">
@@ -55,7 +55,7 @@ export function ProductCard({ product, priority = false }) {
             {product.sizes.join(" / ")}
           </p>
           <Link
-            href={`/products/${product.slug}`}
+            href={`/products/${product.handle}`}
             className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-ink"
           >
             View

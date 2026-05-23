@@ -469,6 +469,7 @@ function normalizeProduct(product) {
     category: product.productType || "T-Shirt",
     collection: primaryCollection?.title || "Mindful Wardrobe",
     collectionHandle: primaryCollection?.handle || null,
+    collectionReferences: collections,
     price,
     currency: product.priceRange?.minVariantPrice?.currencyCode || variants[0]?.currency || "USD",
     colors: colorOption?.values ?? uniqueSelectedOptionValues(variants, "Color"),
@@ -481,6 +482,20 @@ function normalizeProduct(product) {
     description: product.description || "Product details are managed in Shopify.",
     descriptionHtml: product.descriptionHtml,
     details: detailsFromTags(product.tags),
+    tags: product.tags ?? [],
+    fabricDetails:
+      tagValue(product.tags, "fabric") || "Fabric details will be managed with Shopify metafields.",
+    fitDetails:
+      tagValue(product.tags, "fitDetail") || "Fit notes will be managed with Shopify metafields.",
+    designInspiration:
+      tagValue(product.tags, "inspiration") ||
+      "Design inspiration will be managed with Shopify metafields.",
+    careInstructions:
+      tagValue(product.tags, "care") || "Care instructions will be managed with Shopify metafields.",
+    designIntention:
+      tagValue(product.tags, "intention") ||
+      tagValue(product.tags, "mood") ||
+      "Mood and intention will be managed with Shopify metafields.",
     image: featuredImage?.url || "",
     imageAlt: featuredImage?.altText || product.title,
     images,
