@@ -1,3 +1,9 @@
+import {
+  metafieldsToContentMap,
+  parseProductDescription,
+  resolveProductContent
+} from "@/lib/productContent";
+
 const DEFAULT_API_VERSION = "2025-01";
 
 const PRODUCT_CARD_FRAGMENT = `
@@ -9,6 +15,19 @@ const PRODUCT_CARD_FRAGMENT = `
     descriptionHtml
     productType
     tags
+    metafields(identifiers: [
+      { namespace: "custom", key: "fabric_details" }
+      { namespace: "custom", key: "fit_details" }
+      { namespace: "custom", key: "design_inspiration" }
+      { namespace: "custom", key: "care_instructions" }
+      { namespace: "custom", key: "design_intention" }
+      { namespace: "custom", key: "mood_intention" }
+    ]) {
+      namespace
+      key
+      value
+      type
+    }
     availableForSale
     priceRange {
       minVariantPrice {
@@ -447,6 +466,8 @@ const CART_FRAGMENT = `
 
 function normalizeProduct(product) {
   const variants = toEdges(product.variants).map(normalizeVariant);
+  const parsedDescription = parseProductDescription(product.description);
+  const contentMetafields = metafieldsToContentMap(product.metafields ?? []);
   const collections = toEdges(product.collections).map((collection) => ({
     id: collection.id,
     handle: collection.handle,
@@ -465,7 +486,8 @@ function normalizeProduct(product) {
     slug: product.handle,
     name: product.title,
     title: product.title,
-    tagline: firstSentence(product.description) || product.productType || "Mindful wardrobe piece",
+    tagline:
+      firstSentence(parsedDescription.summary) || product.productType || "Mindful wardrobe piece",
     category: product.productType || "T-Shirt",
     collection: primaryCollection?.title || "Mindful Wardrobe",
     collectionHandle: primaryCollection?.handle || null,
@@ -479,23 +501,58 @@ function normalizeProduct(product) {
     availableForSale: product.availableForSale,
     fit: tagValue(product.tags, "fit") || "Shopify variant fit",
     material: tagValue(product.tags, "material") || "See Shopify product details",
-    description: product.description || "Product details are managed in Shopify.",
+    description: parsedDescription.summary || "Product details are managed in Shopify.",
+    fullDescription: product.description || "",
     descriptionHtml: product.descriptionHtml,
     details: detailsFromTags(product.tags),
     tags: product.tags ?? [],
     fabricDetails:
-      tagValue(product.tags, "fabric") || "Fabric details will be managed with Shopify metafields.",
+      resolveProductContent({
+        parsedSections: parsedDescription.sections,
+        metafields: contentMetafields,
+        tags: product.tags,
+        key: "fabricDetails",
+        tagPrefix: "fabric",
+        fallback: "Fabric details will be managed with Shopify metafields."
+      }),
     fitDetails:
-      tagValue(product.tags, "fitDetail") || "Fit notes will be managed with Shopify metafields.",
+      resolveProductContent({
+        parsedSections: parsedDescription.sections,
+        metafields: contentMetafields,
+        tags: product.tags,
+        key: "fitDetails",
+        tagPrefix: "fitDetail",
+        fallback: "Fit notes will be managed with Shopify metafields."
+      }),
     designInspiration:
-      tagValue(product.tags, "inspiration") ||
-      "Design inspiration will be managed with Shopify metafields.",
+      resolveProductContent({
+        parsedSections: parsedDescription.sections,
+        metafields: contentMetafields,
+        tags: product.tags,
+        key: "designInspiration",
+        tagPrefix: "inspiration",
+        fallback: "Design inspiration will be managed with Shopify metafields."
+      }),
     careInstructions:
-      tagValue(product.tags, "care") || "Care instructions will be managed with Shopify metafields.",
+      resolveProductContent({
+        parsedSections: parsedDescription.sections,
+        metafields: contentMetafields,
+        tags: product.tags,
+        key: "careInstructions",
+        tagPrefix: "care",
+        fallback: "Care instructions will be managed with Shopify metafields."
+      }),
     designIntention:
-      tagValue(product.tags, "intention") ||
-      tagValue(product.tags, "mood") ||
-      "Mood and intention will be managed with Shopify metafields.",
+      resolveProductContent({
+        parsedSections: parsedDescription.sections,
+        metafields: contentMetafields,
+        tags: product.tags,
+        key: "designIntention",
+        tagPrefix: "intention",
+        fallback:
+          tagValue(product.tags, "mood") ||
+          "Mood and intention will be managed with Shopify metafields."
+      }),
     image: featuredImage?.url || "",
     imageAlt: featuredImage?.altText || product.title,
     images,

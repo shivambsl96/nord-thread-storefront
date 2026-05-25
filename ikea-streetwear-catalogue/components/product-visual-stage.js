@@ -1,37 +1,39 @@
 import Image from "next/image";
 
 export function ProductVisualStage({ product }) {
-  const secondaryImages = product.images?.slice(1, 4) ?? [];
+  const images = product.images?.length
+    ? product.images
+    : product.image
+      ? [{ url: product.image, altText: product.imageAlt }]
+      : [];
+  const heroImage = images[0];
 
   return (
-    <div className="group sticky top-24">
-      <div className="soft-pattern border border-ink/10 bg-white p-4">
-        <div className="relative overflow-hidden border border-ink/10 bg-mist [perspective:1200px]">
-          <div className="absolute inset-6 border border-ink/10" />
-          <div className="relative aspect-[4/5] transition duration-700 ease-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-7deg)_rotateX(4deg)_translateY(-6px)]">
-            <div className="absolute inset-8 bg-white/55 shadow-[0_28px_70px_rgba(17,17,17,0.16)] [transform:translateZ(-28px)]" />
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.imageAlt || product.name}
-                fill
-                priority
-                className="p-8 object-contain drop-shadow-[0_24px_32px_rgba(17,17,17,0.14)]"
-                unoptimized
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center px-6 text-center text-sm uppercase tracking-[0.18em] text-ink/45">
-                Shopify product image
-              </div>
-            )}
+    <div className="border border-ink/10 bg-white p-4">
+      <div className="relative mx-auto aspect-[4/5] max-h-[620px] max-w-[520px] overflow-hidden bg-mist">
+        {heroImage?.url ? (
+          <Image
+            src={heroImage.url}
+            alt={heroImage.altText || product.name}
+            fill
+            priority
+            className="p-8 object-contain"
+            unoptimized
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center px-6 text-center text-sm uppercase tracking-[0.18em] text-ink/45">
+            Shopify product image
           </div>
-        </div>
+        )}
       </div>
 
-      {secondaryImages.length ? (
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          {secondaryImages.map((image) => (
-            <div key={image.url} className="relative aspect-square border border-ink/10 bg-white">
+      <div className="-mx-4 mt-4 overflow-x-auto px-4 pb-1">
+        <div className="flex min-w-max gap-3">
+          {images.slice(0, 8).map((image, index) => (
+            <div
+              key={`${image.url}-${index}`}
+              className="relative h-28 w-24 shrink-0 border border-ink/10 bg-paper sm:h-32 sm:w-28"
+            >
               <Image
                 src={image.url}
                 alt={image.altText || product.name}
@@ -41,8 +43,13 @@ export function ProductVisualStage({ product }) {
               />
             </div>
           ))}
+          {!images.length ? (
+            <div className="flex h-28 w-24 shrink-0 items-center justify-center border border-dashed border-ink/15 bg-paper px-3 text-center text-[10px] uppercase tracking-[0.16em] text-ink/38 sm:h-32 sm:w-28">
+              Image slot
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

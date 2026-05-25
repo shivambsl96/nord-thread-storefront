@@ -42,10 +42,10 @@ export default async function ProductDetailPage({ params }) {
           Back to catalogue
         </Link>
 
-        <div className="mt-5 grid gap-8 lg:grid-cols-[1.05fr,0.95fr] lg:items-start">
+        <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,0.92fr),minmax(360px,0.82fr)] lg:items-start">
           <ProductVisualStage product={product} />
 
-          <div className="space-y-5">
+          <div className="space-y-5 lg:sticky lg:top-24">
             <div className="border border-ink/10 bg-white p-5">
               <div className="flex flex-col gap-5 border-b border-ink/10 pb-5 sm:flex-row sm:items-start sm:justify-between">
                 <div>
