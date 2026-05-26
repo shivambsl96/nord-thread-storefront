@@ -3,21 +3,16 @@
 import { useState } from "react";
 import { useCart } from "@/components/cart-provider";
 
-export function ProductConfigurator({ product }) {
-  const colorOption = product.options.find((option) => option.name.toLowerCase() === "color");
-  const sizeOption = product.options.find((option) => option.name.toLowerCase() === "size");
-  const [selectedColor, setSelectedColor] = useState(product.colors[0] ?? "");
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0] ?? "");
+export function ProductConfigurator({ product, selectedOptions, selectedVariant, onOptionChange }) {
   const [justAdded, setJustAdded] = useState(false);
   const { addItem, error, isUpdating, itemCount, reward } = useCart();
-  const selectedVariant =
-    product.variants.find((variant) =>
-      variant.selectedOptions.every((option) => {
-        if (option.name.toLowerCase() === "color") return option.value === selectedColor;
-        if (option.name.toLowerCase() === "size") return option.value === selectedSize;
-        return true;
-      })
-    ) ?? product.variants[0];
+  const selectableOptions = (product.options ?? []).filter(
+    (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
+  );
+  const selectedLabel =
+    selectedVariant?.selectedOptions?.map((option) => option.value).join(" / ") ||
+    selectedVariant?.title ||
+    "Default";
 
   return (
     <div className="border border-ink/10 bg-white p-5">
@@ -37,59 +32,50 @@ export function ProductConfigurator({ product }) {
       </div>
 
       <div className="mt-5 space-y-5">
-        {colorOption ? (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink">
-            Color
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {product.colors.map((color) => (
-              <button
-                key={color}
-                type="button"
-                onClick={() => setSelectedColor(color)}
-                className={`border px-4 py-2 text-sm uppercase tracking-[0.14em] transition ${
-                  selectedColor === color
-                    ? "border-ink bg-white text-ink shadow-[inset_0_-3px_0_#ffcf3f]"
-                    : "border-ink/15 bg-paper text-ink hover:border-ink"
-                }`}
-              >
-                {color}
-              </button>
-            ))}
-          </div>
-        </div>
-        ) : null}
+        {selectableOptions.length ? (
+          selectableOptions.map((option) => (
+            <div key={option.id ?? option.name}>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink">
+                {option.name}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {option.values.map((value) => {
+                  const isSelected = selectedOptions[option.name] === value;
+                  const canSelect = hasMatchingVariant(product.variants, {
+                    ...selectedOptions,
+                    [option.name]: value
+                  });
 
-        {sizeOption ? (
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink">
-            Size
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {product.sizes.map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => setSelectedSize(size)}
-                className={`min-w-12 border px-4 py-2 text-sm uppercase tracking-[0.14em] transition ${
-                  selectedSize === size
-                    ? "border-ink bg-white text-ink shadow-[inset_0_-3px_0_#ffcf3f]"
-                    : "border-ink/15 bg-paper text-ink hover:border-ink"
-                }`}
-              >
-                {size}
-              </button>
-            ))}
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      disabled={!canSelect}
+                      onClick={() => onOptionChange(option.name, value)}
+                      className={`border px-4 py-2 text-sm uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-35 ${
+                        isSelected
+                          ? "border-ink bg-white text-ink shadow-[inset_0_-3px_0_#ffcf3f]"
+                          : "border-ink/15 bg-paper text-ink hover:border-ink"
+                      }`}
+                    >
+                      {value}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="border border-ink/10 bg-paper p-4 text-sm leading-6 text-ink/60">
+            This product does not expose selectable Shopify variants yet.
           </div>
-        </div>
-        ) : null}
+        )}
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="border border-ink/10 bg-paper p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-ink/45">Selected</p>
             <p className="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-ink">
-              {selectedColor} / {selectedSize}
+              {selectedLabel}
             </p>
           </div>
           <div className="border border-ink/10 bg-paper p-4">
@@ -140,6 +126,12 @@ export function ProductConfigurator({ product }) {
         ) : null}
       </div>
     </div>
+  );
+}
+
+function hasMatchingVariant(variants, nextOptions) {
+  return variants.some((variant) =>
+    variant.selectedOptions.every((option) => nextOptions[option.name] === option.value)
   );
 }
 

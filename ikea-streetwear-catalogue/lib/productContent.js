@@ -1,4 +1,5 @@
 const SECTION_LABELS = [
+  ["productStory", ["product story", "story", "description"]],
   ["fabricDetails", ["fabric details", "fabric", "material details"]],
   ["fitDetails", ["fit details", "fit"]],
   ["designInspiration", ["design inspiration", "inspiration", "design notes"]],
@@ -83,21 +84,42 @@ export function hasStructuredProductContent(product) {
 
 function metafieldKeyToContentKey(key = "") {
   return {
+    product_story: "productStory",
     fabric_details: "fabricDetails",
     fit_details: "fitDetails",
     design_inspiration: "designInspiration",
     care_instructions: "careInstructions",
     design_intention: "designIntention",
-    mood_intention: "designIntention"
+    mood_intention: "designIntention",
+    mood: "designIntention",
+    gsm: "gsm",
+    material: "material"
   }[key];
 }
 
 function normalizeDescription(description = "") {
-  return String(description)
+  const value = String(description);
+  const text = /<\/?[a-z][\s\S]*>/i.test(value) ? htmlToText(value) : value;
+
+  return text
     .replace(/\r\n/g, "\n")
     .replace(/\u00a0/g, " ")
     .replace(/[ \t]+\n/g, "\n")
     .trim();
+}
+
+function htmlToText(html = "") {
+  return String(html)
+    .replace(/<\s*br\s*\/?>/gi, "\n")
+    .replace(/<\/\s*(p|div|li|h[1-6])\s*>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">");
 }
 
 function tagValue(tags = [], prefix) {

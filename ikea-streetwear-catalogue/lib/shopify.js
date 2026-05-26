@@ -15,13 +15,18 @@ const PRODUCT_CARD_FRAGMENT = `
     descriptionHtml
     productType
     tags
+    # These custom metafields are optional today and become the product detail content schema later.
     metafields(identifiers: [
+      { namespace: "custom", key: "product_story" }
       { namespace: "custom", key: "fabric_details" }
       { namespace: "custom", key: "fit_details" }
       { namespace: "custom", key: "design_inspiration" }
       { namespace: "custom", key: "care_instructions" }
       { namespace: "custom", key: "design_intention" }
       { namespace: "custom", key: "mood_intention" }
+      { namespace: "custom", key: "mood" }
+      { namespace: "custom", key: "gsm" }
+      { namespace: "custom", key: "material" }
     ]) {
       namespace
       key
@@ -34,6 +39,20 @@ const PRODUCT_CARD_FRAGMENT = `
         amount
         currencyCode
       }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    compareAtPriceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
     }
     featuredImage {
       url
@@ -41,7 +60,7 @@ const PRODUCT_CARD_FRAGMENT = `
       width
       height
     }
-    images(first: 8) {
+    images(first: 20) {
       edges {
         node {
           url
@@ -56,7 +75,7 @@ const PRODUCT_CARD_FRAGMENT = `
       name
       values
     }
-    variants(first: 100) {
+    variants(first: 50) {
       edges {
         node {
           id
@@ -71,9 +90,15 @@ const PRODUCT_CARD_FRAGMENT = `
             amount
             currencyCode
           }
+          compareAtPrice {
+            amount
+            currencyCode
+          }
           image {
             url
             altText
+            width
+            height
           }
         }
       }
@@ -466,7 +491,7 @@ const CART_FRAGMENT = `
 
 function normalizeProduct(product) {
   const variants = toEdges(product.variants).map(normalizeVariant);
-  const parsedDescription = parseProductDescription(product.description);
+  const parsedDescription = parseProductDescription(product.descriptionHtml || product.description);
   const contentMetafields = metafieldsToContentMap(product.metafields ?? []);
   const collections = toEdges(product.collections).map((collection) => ({
     id: collection.id,
@@ -479,6 +504,14 @@ function normalizeProduct(product) {
   const colorOption = findOption(product.options, "Color");
   const sizeOption = findOption(product.options, "Size");
   const price = Number(product.priceRange?.minVariantPrice?.amount ?? variants[0]?.price ?? 0);
+  const compareAtPrice = Number(product.compareAtPriceRange?.minVariantPrice?.amount ?? 0);
+  const productStory = resolveProductContent({
+    parsedSections: parsedDescription.sections,
+    metafields: contentMetafields,
+    tags: product.tags,
+    key: "productStory",
+    fallback: parsedDescription.summary || "Product story is managed in Shopify."
+  });
 
   return {
     id: product.id,
@@ -493,6 +526,7 @@ function normalizeProduct(product) {
     collectionHandle: primaryCollection?.handle || null,
     collectionReferences: collections,
     price,
+    compareAtPrice,
     currency: product.priceRange?.minVariantPrice?.currencyCode || variants[0]?.currency || "USD",
     colors: colorOption?.values ?? uniqueSelectedOptionValues(variants, "Color"),
     sizes: sizeOption?.values ?? uniqueSelectedOptionValues(variants, "Size"),
@@ -500,8 +534,10 @@ function normalizeProduct(product) {
     variants,
     availableForSale: product.availableForSale,
     fit: tagValue(product.tags, "fit") || "Shopify variant fit",
-    material: tagValue(product.tags, "material") || "See Shopify product details",
-    description: parsedDescription.summary || "Product details are managed in Shopify.",
+    material: contentMetafields.material || tagValue(product.tags, "material") || "See Shopify product details",
+    gsm: contentMetafields.gsm || tagValue(product.tags, "gsm") || "",
+    description: productStory || parsedDescription.summary || "Product details are managed in Shopify.",
+    productStory,
     fullDescription: product.description || "",
     descriptionHtml: product.descriptionHtml,
     details: detailsFromTags(product.tags),
@@ -576,6 +612,7 @@ function normalizeVariant(variant) {
     color: selectedOptions.find((option) => option.name.toLowerCase() === "color")?.value,
     size: selectedOptions.find((option) => option.name.toLowerCase() === "size")?.value,
     price: Number(variant.price?.amount ?? 0),
+    compareAtPrice: Number(variant.compareAtPrice?.amount ?? 0),
     currency: variant.price?.currencyCode || "USD",
     image: normalizeImage(variant.image)
   };
