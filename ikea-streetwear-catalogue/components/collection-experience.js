@@ -126,7 +126,7 @@ export function CollectionExperience({ collection, collections }) {
               </h2>
             </div>
             <p className="max-w-md text-sm leading-6 text-ink/58">
-              Product membership, order, prices, variants, and availability come from Shopify.
+              A focused edit for this mood.
             </p>
           </div>
 
@@ -139,13 +139,10 @@ export function CollectionExperience({ collection, collections }) {
           ) : (
             <div className="border border-dashed border-ink/20 bg-white px-6 py-10">
               <p className="font-display text-2xl font-bold uppercase tracking-[0.08em] text-ink">
-                Collection ready for Shopify products
+                Almost ready
               </p>
               <p className="mt-3 max-w-xl text-sm leading-6 text-ink/62">
-                Create or populate the Shopify collection handle{" "}
-                <span className="font-semibold">{collection.handle}</span>. Automated
-                collections can use the tag{" "}
-                <span className="font-semibold">collection:{collection.handle}</span>.
+                Pieces for <span className="font-semibold">{collection.name}</span> land here soon.
               </p>
             </div>
           )}

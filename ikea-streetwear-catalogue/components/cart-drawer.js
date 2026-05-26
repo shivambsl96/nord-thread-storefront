@@ -8,6 +8,7 @@ export function CartDrawer() {
     items,
     itemCount,
     subtotal,
+    currency,
     reward,
     checkout,
     checkoutUrl,
@@ -36,7 +37,7 @@ export function CartDrawer() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">Cart</p>
             <p className="mt-1 text-sm text-ink/60">
-              {itemCount === 0 ? "Your wardrobe is empty." : `${itemCount} pieces selected`}
+              {itemCount === 0 ? "Your cart is empty." : `${formatPieceCount(itemCount)} selected`}
             </p>
           </div>
           <button
@@ -57,7 +58,7 @@ export function CartDrawer() {
               You&apos;ve unlocked {reward.percentage}%
             </p>
             <p className="mt-2 text-sm leading-6 text-ink/68">
-              Thanks for supporting mindful fashion.
+              Thanks for backing the brand.
             </p>
           </div>
         ) : null}
@@ -68,8 +69,7 @@ export function CartDrawer() {
               Gratitude reward
             </p>
             <p className="mt-2 text-sm leading-6 text-ink/68">
-              Add {reward.nextTier.quantity - itemCount} more piece
-              {reward.nextTier.quantity - itemCount === 1 ? "" : "s"} to unlock a{" "}
+              Add {formatPieceCount(reward.nextTier.quantity - itemCount)} to unlock a{" "}
               {reward.nextTier.percentage}% gratitude reward.
             </p>
           </div>
@@ -82,7 +82,7 @@ export function CartDrawer() {
                 Begin with one piece
               </p>
               <p className="mt-3 text-sm leading-6 text-ink/62">
-                Rewards stay quiet until you add something meaningful to your wardrobe.
+                Pick your mood.
               </p>
             </div>
           ) : (
@@ -155,11 +155,10 @@ export function CartDrawer() {
         <div className="border-t border-ink/10 bg-white px-5 py-5">
           <div className="flex items-center justify-between text-sm uppercase tracking-[0.16em] text-ink">
             <span>Subtotal</span>
-            <span>{formatMoney(subtotal, items[0]?.cost?.currency)}</span>
+            <span>{formatMoney(subtotal, currency)}</span>
           </div>
           <p className="mt-3 text-sm leading-6 text-ink/60">
-            Shopify handles checkout, payments, orders, taxes, shipping, and the order
-            lifecycle.
+            Secure checkout opens next.
           </p>
           {error ? (
             <p className="mt-3 border border-coral/30 bg-paper px-4 py-3 text-sm leading-6 text-ink/68">
@@ -172,7 +171,7 @@ export function CartDrawer() {
             onClick={checkout}
             className="mt-5 w-full border border-ink bg-white px-5 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-ink shadow-[inset_0_-4px_0_#ffcf3f] transition hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Checkout with Shopify
+            Checkout
           </button>
         </div>
       </aside>
@@ -180,8 +179,12 @@ export function CartDrawer() {
   );
 }
 
-function formatMoney(amount, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+function formatPieceCount(count) {
+  return `${count} ${count === 1 ? "piece" : "pieces"}`;
+}
+
+function formatMoney(amount, currency = "INR") {
+  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
     style: "currency",
     currency
   }).format(Number(amount));

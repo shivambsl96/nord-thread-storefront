@@ -1,23 +1,23 @@
 export function ProductStorySections({ product }) {
   const sections = [
     {
-      label: "Product story",
+      label: "Story",
       value: product.productStory
     },
     {
-      label: "Fabric details",
+      label: "Fabric",
       value: product.fabricDetails
     },
     {
-      label: "Fit details",
+      label: "Fit",
       value: product.fitDetails
     },
     {
-      label: "Design inspiration",
+      label: "Details",
       value: product.designInspiration
     },
     {
-      label: "Care instructions",
+      label: "Care",
       value: product.careInstructions
     },
     {
@@ -33,7 +33,7 @@ export function ProductStorySections({ product }) {
     return (
       <section className="mt-12 border-y border-ink/10 bg-white py-8">
         <div className="border border-dashed border-ink/15 bg-paper p-5 text-sm leading-7 text-ink/60">
-          Product details will appear here once Shopify descriptions or metafields are configured.
+          More details soon.
         </div>
       </section>
     );

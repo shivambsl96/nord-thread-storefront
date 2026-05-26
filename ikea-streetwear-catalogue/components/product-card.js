@@ -23,7 +23,7 @@ export function ProductCard({ product, priority = false }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center px-6 text-center text-xs uppercase tracking-[0.18em] text-ink/45">
-              No Shopify image
+              Image soon
             </div>
           )}
         </div>
@@ -67,8 +67,8 @@ export function ProductCard({ product, priority = false }) {
   );
 }
 
-function formatMoney(amount, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+function formatMoney(amount, currency = "INR") {
+  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
     style: "currency",
     currency
   }).format(Number(amount));

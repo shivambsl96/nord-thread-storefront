@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 
-export function ProductVisualStage({ product, selectedImageUrl, onSelectImage }) {
-  const images = product.images?.length
-    ? product.images
+export function ProductVisualStage({ product, images: visibleImages, selectedImageUrl, onSelectImage }) {
+  const images = visibleImages?.length
+    ? visibleImages
+    : product.images?.length
+      ? product.images
     : product.image
       ? [{ url: product.image, altText: product.imageAlt }]
       : [];
@@ -41,7 +43,7 @@ export function ProductVisualStage({ product, selectedImageUrl, onSelectImage })
           />
         ) : (
           <div className="flex h-full items-center justify-center px-6 text-center text-sm uppercase tracking-[0.18em] text-ink/45">
-            Shopify product image
+            Product image
           </div>
         )}
 

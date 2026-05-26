@@ -9,8 +9,7 @@ export function SiteFooter() {
             Nord Thread
           </p>
           <p className="mt-3 max-w-sm text-sm leading-6 text-ink/65">
-            A calm catalogue-style storefront for premium tees, built around emotional
-            collections, mindful dressing, and a quieter sense of self-improvement.
+            Soft chaos. Clean fits. Made for quiet wins.
           </p>
         </div>
         <div>
@@ -25,12 +24,10 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-ink">
-            Future Ready
+            Notes
           </p>
           <p className="mt-3 text-sm leading-6 text-ink/65">
-            Products, collections, variants, cart lines, and checkout drafts now follow
-            a Storefront-shaped data model so Shopify integration can slot in later
-            without changing the frontend tone.
+            Low noise. High intent. Built for better days.
           </p>
         </div>
       </div>

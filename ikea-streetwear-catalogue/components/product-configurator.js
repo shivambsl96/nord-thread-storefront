@@ -9,21 +9,16 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
   const selectableOptions = (product.options ?? []).filter(
     (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
   );
-  const selectedLabel =
-    selectedVariant?.selectedOptions?.map((option) => option.value).join(" / ") ||
-    selectedVariant?.title ||
-    "Default";
 
   return (
     <div className="border border-ink/10 bg-white p-5">
       <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
-            Wardrobe selection
+            Pick your mood.
           </p>
           <p className="mt-2 text-sm leading-6 text-ink/60">
-            Choose the size and color that best fits your daily rhythm. Availability and
-            variants are synced from Shopify.
+            Stay lowkey.
           </p>
         </div>
         <p className="text-lg font-semibold uppercase tracking-[0.14em] text-ink">
@@ -67,24 +62,9 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
           ))
         ) : (
           <div className="border border-ink/10 bg-paper p-4 text-sm leading-6 text-ink/60">
-            This product does not expose selectable Shopify variants yet.
+            Single finish.
           </div>
         )}
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="border border-ink/10 bg-paper p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-ink/45">Selected</p>
-            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-ink">
-              {selectedLabel}
-            </p>
-          </div>
-          <div className="border border-ink/10 bg-paper p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-ink/45">Availability</p>
-            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-ink">
-              {selectedVariant?.availableForSale ? "Available" : "Unavailable"}
-            </p>
-          </div>
-        </div>
 
         <button
           type="button"
@@ -95,7 +75,7 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
           }}
           className="w-full border border-ink bg-white px-5 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-ink shadow-[inset_0_-4px_0_#ffcf3f] transition hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isUpdating ? "Adding..." : "Add to wardrobe"}
+          {isUpdating ? "Adding..." : "Add to cart"}
         </button>
 
         {error ? (
@@ -112,15 +92,14 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
             <p className="mt-2 text-sm leading-6 text-ink/68">
               {reward.unlocked
                 ? `You've unlocked a gratitude reward of ${reward.percentage}%.`
-                : "Your piece has been added. Gratitude rewards appear quietly once your wardrobe grows."}
+                : "Added. Quietly locked in."}
             </p>
           </div>
         ) : null}
 
         {itemCount > 0 && !reward.unlocked && reward.nextTier ? (
           <p className="text-xs uppercase tracking-[0.18em] text-ink/45">
-            Add {reward.nextTier.quantity - itemCount} more piece
-            {reward.nextTier.quantity - itemCount === 1 ? "" : "s"} to unlock a{" "}
+            Add {formatPieceCount(reward.nextTier.quantity - itemCount)} to unlock a{" "}
             {reward.nextTier.percentage}% gratitude reward.
           </p>
         ) : null}
@@ -129,14 +108,18 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
   );
 }
 
+function formatPieceCount(count) {
+  return `${count} ${count === 1 ? "piece" : "pieces"}`;
+}
+
 function hasMatchingVariant(variants, nextOptions) {
   return variants.some((variant) =>
     variant.selectedOptions.every((option) => nextOptions[option.name] === option.value)
   );
 }
 
-function formatMoney(amount, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+function formatMoney(amount, currency = "INR") {
+  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
     style: "currency",
     currency
   }).format(Number(amount));

@@ -131,6 +131,8 @@ export const collectionStoryOrder = [...collectionStories]
   .sort((left, right) => left.sortOrder - right.sortOrder)
   .map((collection) => collection.handle);
 
+export const approvedCollectionHandles = new Set(collectionStoryOrder);
+
 export function getCollectionStory(value = "") {
   const normalized = normalizeHandle(value);
   return collectionStories.find(
@@ -146,7 +148,7 @@ export function applyCollectionStory(collection) {
 
   const story = getCollectionStory(collection.handle) ?? getCollectionStory(collection.title);
   const fallbackDescription =
-    collection.description || "A considered Shopify collection from the mindful catalogue.";
+    collection.description || "A considered collection from the mindful catalogue.";
 
   return {
     ...collection,
@@ -156,7 +158,7 @@ export function applyCollectionStory(collection) {
     shortStory: story?.shortStory ?? fallbackDescription,
     shortSubtitle: story?.shortSubtitle ?? collection.shortSubtitle ?? "Mindful wardrobe edit",
     story: story?.story ?? fallbackDescription,
-    mood: story?.mood ?? collection.mood ?? "Considered edit / Shopify collection",
+    mood: story?.mood ?? collection.mood ?? "Considered edit",
     moodWords: story?.moodWords ?? collection.moodWords ?? [],
     symbol: story?.symbol ?? collection.symbol ?? collection.title ?? collection.name,
     themeColor: story?.themeColor ?? collection.themeColor ?? "#fcfcf8",
@@ -185,7 +187,10 @@ export function createPlaceholderCollection(story) {
 }
 
 export function mergeCollectionsWithPlaceholders(collections = []) {
-  const enrichedCollections = collections.map(applyCollectionStory).filter(Boolean);
+  const enrichedCollections = collections
+    .filter((collection) => approvedCollectionHandles.has(normalizeHandle(collection.handle)))
+    .map(applyCollectionStory)
+    .filter(Boolean);
   const existingHandles = new Set(enrichedCollections.map((collection) => collection.handle));
   const placeholders = collectionStories
     .filter((story) => !existingHandles.has(story.handle))

@@ -14,9 +14,16 @@ export function ProductDetailClient({ product }) {
     () => findSelectedVariant(product.variants, selectedOptions) ?? initialVariant,
     [initialVariant, product.variants, selectedOptions]
   );
-  const [selectedImageUrl, setSelectedImageUrl] = useState(
-    selectedVariant?.image?.url || product.image || ""
+  const selectedColor = selectedVariant?.color || selectedOptions.Color || selectedOptions.Colour || "";
+  const galleryImages = useMemo(
+    () => filterImagesForColor(product.images, selectedColor, selectedVariant?.image),
+    [product.images, selectedColor, selectedVariant?.image]
   );
+  const mainImageUrl = useMemo(
+    () => resolveMainImageUrl(product, selectedVariant, selectedColor, galleryImages),
+    [galleryImages, product, selectedColor, selectedVariant]
+  );
+  const [selectedImageUrl, setSelectedImageUrl] = useState(mainImageUrl);
 
   function updateOption(optionName, value) {
     const nextOptions = {
@@ -24,15 +31,17 @@ export function ProductDetailClient({ product }) {
       [optionName]: value
     };
     const nextVariant = findSelectedVariant(product.variants, nextOptions) ?? initialVariant;
+    const nextColor = nextVariant?.color || nextOptions.Color || nextOptions.Colour || "";
 
     setSelectedOptions(nextOptions);
-    setSelectedImageUrl(nextVariant?.image?.url || product.image || "");
+    setSelectedImageUrl(resolveMainImageUrl(product, nextVariant, nextColor));
   }
 
   return (
     <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,0.92fr),minmax(360px,0.82fr)] lg:items-start">
       <ProductVisualStage
         product={product}
+        images={galleryImages}
         selectedImageUrl={selectedImageUrl}
         onSelectImage={setSelectedImageUrl}
       />
@@ -63,27 +72,10 @@ export function ProductDetailClient({ product }) {
             </div>
           </div>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-ink/66">
-            {product.description}
-          </p>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <InfoCard label="Availability" value={selectedVariant?.availableForSale ? "Available" : "Unavailable"} />
-            <InfoCard label="Colors" value={product.colors.length ? product.colors.join(" / ") : "Shopify variant"} />
-            <InfoCard label="Sizes" value={product.sizes.length ? product.sizes.join(" / ") : "Shopify variant"} />
-          </div>
-
-          {product.gsm || product.material ? (
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {product.material ? <InfoCard label="Material" value={product.material} /> : null}
-              {product.gsm ? <InfoCard label="GSM" value={product.gsm} /> : null}
-            </div>
-          ) : null}
-
           {product.collectionReferences?.length ? (
             <div className="mt-5 border border-ink/10 bg-paper p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-ink/45">
-                Shopify collections
+                Collections
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {product.collectionReferences.map((collection) => (
@@ -124,25 +116,72 @@ export function ProductDetailClient({ product }) {
   );
 }
 
-function InfoCard({ label, value }) {
-  return (
-    <div className="border border-ink/10 bg-paper p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-ink/45">{label}</p>
-      <p className="mt-2 text-sm font-semibold uppercase tracking-[0.12em] text-ink">
-        {value}
-      </p>
-    </div>
-  );
-}
-
 function findSelectedVariant(variants, selectedOptions) {
   return variants.find((variant) =>
     variant.selectedOptions.every((option) => selectedOptions[option.name] === option.value)
   );
 }
 
-function formatMoney(amount, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+function resolveMainImageUrl(product, variant, color, images = product.images ?? []) {
+  if (variant?.image?.url) {
+    return variant.image.url;
+  }
+
+  return findColorImage(images, color)?.url || product.image || images[0]?.url || "";
+}
+
+function filterImagesForColor(images = [], color, variantImage) {
+  if (!color) {
+    return images;
+  }
+
+  const filteredImages = images.filter(
+    (image) => imageMatchesColor(image, color) || imageIsCommon(image)
+  );
+
+  if (variantImage?.url && !filteredImages.some((image) => image.url === variantImage.url)) {
+    filteredImages.unshift(variantImage);
+  }
+
+  return filteredImages.length ? filteredImages : images;
+}
+
+function findColorImage(images = [], color) {
+  if (!color) {
+    return null;
+  }
+
+  return images.find((image) => imageMatchesColor(image, color));
+}
+
+function imageMatchesColor(image, color) {
+  const colorTokens = tokenize(color);
+  const imageTokens = tokenize(`${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`);
+
+  return colorTokens.some((token) => imageTokens.includes(token));
+}
+
+function imageIsCommon(image) {
+  const text = `${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`.toLowerCase();
+  return ["size", "chart", "guide", "fit", "detail", "fabric", "label"].some((token) =>
+    text.includes(token)
+  );
+}
+
+function fileNameFromUrl(url = "") {
+  return String(url).split("/").pop()?.split("?")[0] ?? "";
+}
+
+function tokenize(value = "") {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(" ")
+    .filter(Boolean);
+}
+
+function formatMoney(amount, currency = "INR") {
+  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
     style: "currency",
     currency
   }).format(Number(amount));

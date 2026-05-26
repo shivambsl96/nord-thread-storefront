@@ -5,9 +5,9 @@ import { ProductCard } from "@/components/product-card";
 
 const priceRanges = [
   { label: "All prices", value: "all" },
-  { label: "Under $35", value: "under-35" },
-  { label: "$35 to $45", value: "35-45" },
-  { label: "$45 and above", value: "45-plus" }
+  { label: "Under ₹1,500", value: "under-1500" },
+  { label: "₹1,500 to ₹2,500", value: "1500-2500" },
+  { label: "₹2,500 and above", value: "2500-plus" }
 ];
 
 export function CatalogueClient({ products, filters }) {
@@ -33,9 +33,9 @@ export function CatalogueClient({ products, filters }) {
     const matchesColor = selectedColor === "All" || product.colors.includes(selectedColor);
     const matchesPrice =
       selectedPrice === "all" ||
-      (selectedPrice === "under-35" && product.price < 35) ||
-      (selectedPrice === "35-45" && product.price >= 35 && product.price < 45) ||
-      (selectedPrice === "45-plus" && product.price >= 45);
+      (selectedPrice === "under-1500" && product.price < 1500) ||
+      (selectedPrice === "1500-2500" && product.price >= 1500 && product.price < 2500) ||
+      (selectedPrice === "2500-plus" && product.price >= 2500);
 
     return (
       matchesSearch &&
@@ -124,8 +124,7 @@ export function CatalogueClient({ products, filters }) {
             </h3>
           </div>
           <p className="max-w-lg text-sm leading-6 text-ink/60">
-            Product data, variants, imagery, pricing, and availability are synced from
-            Shopify Storefront API.
+            Browse by mood, color, size, and price.
           </p>
         </div>
 

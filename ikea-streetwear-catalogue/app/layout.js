@@ -5,9 +5,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata = {
-  title: "Nord Thread | Mindful Wardrobe Catalogue",
-  description:
-    "A calm Scandinavian catalogue experience for premium self-improvement T-shirt collections."
+  title: "Nord Thread | Wear the Mood",
+  description: "Soft chaos. Clean fits. Made for quiet wins."
 };
 
 export default function RootLayout({ children }) {

@@ -18,8 +18,8 @@ export default async function CollectionsPage() {
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
           <SectionHeading
             eyebrow="Collections"
-            title="Mood-led wardrobe themes"
-            description="These collections are emotional directions rather than clothing categories. Each one keeps the same design discipline while shifting the internal feeling."
+            title="Pick your mood"
+            description="Focus. Peace. Growth. Stillness. Keep it simple."
           />
         </div>
       </section>
@@ -50,11 +50,10 @@ export default async function CollectionsPage() {
         ) : (
           <div className="mt-10 border border-dashed border-ink/20 bg-white px-6 py-10">
             <p className="font-display text-2xl font-bold uppercase tracking-[0.08em] text-ink">
-              Shopify collections will appear here
+              Collections are loading
             </p>
             <p className="mt-3 max-w-xl text-sm leading-6 text-ink/62">
-              Create collections in Shopify and expose them to the Storefront API to fill
-              this page with live collection data.
+              New edits land here soon.
             </p>
           </div>
         )}

@@ -18,17 +18,15 @@ export default async function HomePage() {
           <div className="flex flex-col justify-between gap-7">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-coral">
-                Calm Scandinavian wardrobe
+                Soft chaos. Clean fits.
               </p>
               <h1 className="mt-4 font-display text-4xl font-bold uppercase leading-[0.95] tracking-[0.05em] text-ink sm:text-5xl lg:text-6xl">
-                Wear your mindset.
+                Wear the mood.
                 <br />
-                Keep the noise low.
+                Stay lowkey.
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-ink/68">
-                Nord Thread turns self-improvement into a calmer wardrobe language:
-                precise layouts, clean silhouettes, and collections built around how you
-                want to feel rather than how loud you want to look.
+                Low noise. High intent. Tees for better days.
               </p>
             </div>
 
@@ -57,7 +55,7 @@ export default async function HomePage() {
                     Focus
                   </p>
                   <p className="mt-3 font-display text-2xl font-bold uppercase leading-tight tracking-[0.08em] text-ink">
-                    Premium pieces for quieter ambition
+                    Made for quiet wins
                   </p>
                 </div>
                 <div className="grid gap-4">
@@ -84,16 +82,15 @@ export default async function HomePage() {
             <div className="surface-peace border border-ink/10 p-5 transition duration-300 hover:-translate-y-1">
               <p className="text-xs uppercase tracking-[0.2em] text-ink/50">Mood</p>
               <p className="mt-3 font-display text-xl font-bold uppercase leading-tight tracking-[0.08em] text-ink">
-                Focused, calm,
+                Feel good.
                 <br />
-                emotionally premium
+                Look clean.
               </p>
             </div>
             <div className="soft-pattern border border-ink/10 bg-white p-5">
               <p className="text-xs uppercase tracking-[0.2em] text-ink/50">Wardrobe note</p>
               <p className="mt-3 text-sm leading-7 text-ink/68">
-                The catalogue still leads with product, pricing, and fit clarity, but the
-                emotional tone is softer, wiser, and less performative.
+                Clean pieces. Easy rotation. No loud stuff.
               </p>
             </div>
           </div>
@@ -104,8 +101,8 @@ export default async function HomePage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
             eyebrow="Featured products"
-            title="A calmer edit"
-            description="A first-pass product selection for people who want their wardrobe to feel intentional, useful, and visually quiet."
+            title="Quietly locked in"
+            description="Your everyday reset."
           />
           <Link
             href="/catalogue"
@@ -130,8 +127,8 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <SectionHeading
             eyebrow="Collections"
-            title="Emotional collections"
-            description="Each collection holds a different internal tone while preserving the same catalogue grid, spacing, and premium restraint."
+            title="Pick your mood"
+            description="Focus, peace, growth, stillness. Keep it simple."
           />
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {collectionCards.map((collection) => (
@@ -158,34 +155,32 @@ export default async function HomePage() {
         <div className="grid gap-5 lg:grid-cols-[1.05fr,0.95fr]">
           <div className="soft-pattern surface-stillness border border-ink/10 p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
-              Mindful wardrobe
+              Low noise
             </p>
             <h2 className="mt-4 font-display text-3xl font-bold uppercase leading-tight tracking-[0.06em] text-ink">
-              Dress for the state you want to return to.
+              Built for better days.
             </h2>
             <p className="mt-5 max-w-xl text-base leading-7 text-ink/68">
-              These pieces are not designed as loud declarations. They are cues:
-              reminders to stay steady, stay soft, stay attentive, and keep your inner
-              environment uncluttered.
+              Soft graphics. Clean fits. Everyday reset energy.
             </p>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <LifestyleTile
               title="Morning clarity"
-              text="Minimal typography, open space, and clean silhouettes for focused starts."
+              text="Clean starts. Less noise."
             />
             <LifestyleTile
               title="Quiet confidence"
-              text="Premium construction and calm symbolism instead of aggressive status signals."
+              text="Simple pieces that still hit."
             />
             <LifestyleTile
               title="Intentional rotation"
-              text="A compact wardrobe language that still feels expressive and emotionally alive."
+              text="Easy tees. Better days."
             />
             <LifestyleTile
               title="Subtle reward"
-              text="The brand appreciation system appears only after adding to cart, keeping the storefront premium first."
+              text="A small thanks when your cart grows."
             />
           </div>
         </div>
@@ -198,11 +193,10 @@ function EmptyShopifyState() {
   return (
     <div className="mt-8 border border-dashed border-ink/20 bg-white px-6 py-10">
       <p className="font-display text-2xl font-bold uppercase tracking-[0.08em] text-ink">
-        Connect Shopify to populate products
+        Products are loading
       </p>
       <p className="mt-3 max-w-xl text-sm leading-6 text-ink/62">
-        Add the Storefront API environment variables and Shopify will become the source of
-        truth for products, images, collections, prices, variants, and availability.
+        New pieces will land here soon.
       </p>
     </div>
   );

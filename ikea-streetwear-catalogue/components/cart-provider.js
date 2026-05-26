@@ -67,7 +67,7 @@ export function CartProvider({ children }) {
         : await createCart([line]);
 
       if (!nextCart) {
-        throw new Error("Unable to create Shopify cart. Check Storefront API configuration.");
+        throw new Error("Unable to prepare your cart. Please try again.");
       }
 
       setCart(nextCart);
@@ -127,6 +127,7 @@ export function CartProvider({ children }) {
   const items = cart?.items ?? [];
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = cart?.subtotal ?? 0;
+  const currency = cart?.currency ?? items[0]?.cost?.currency ?? "INR";
   const reward = calculateGratitudeReward(itemCount);
 
   return (
@@ -136,6 +137,7 @@ export function CartProvider({ children }) {
         items,
         itemCount,
         subtotal,
+        currency,
         reward,
         checkoutUrl: cart?.checkoutUrl ?? "",
         isDrawerOpen,

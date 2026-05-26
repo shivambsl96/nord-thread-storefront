@@ -64,7 +64,9 @@ export async function getCollections() {
 
 export async function getCollectionByHandle(handle) {
   const collection = await getCatalogueCollectionByHandle(handle);
-  if (collection) {
+  const story = getCollectionStory(handle) ?? getCollectionStory(collection?.title);
+
+  if (collection && story) {
     return applyCollectionStory(collection);
   }
 

@@ -1,10 +1,10 @@
 import { SectionHeading } from "@/components/section-heading";
 
 const principles = [
-  "Product-first layout with quiet emotional storytelling",
-  "Scandinavian whitespace and disciplined grid structure",
-  "Flexible components prepared for Shopify cart and storefront work",
-  "Minimal symbolism and mindful language without fake spirituality"
+  "Product first. Always.",
+  "Clean grid. Clear space.",
+  "Low noise. High intent.",
+  "No fake deep stuff."
 ];
 
 export const metadata = {
@@ -17,8 +17,8 @@ export default function AboutPage() {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <SectionHeading
         eyebrow="About the brand"
-        title="Catalogue-minded self-improvement"
-        description="Nord Thread imagines premium T-shirt merchandising through an IKEA-like lens, then softens it into a calmer lifestyle brand built around attention, emotional clarity, and daily intention."
+        title="Soft chaos. Clean fits."
+        description="Premium tees for better days. Simple as that."
       />
 
       <div className="mt-10 grid gap-5 lg:grid-cols-[1fr,1fr]">
@@ -27,9 +27,7 @@ export default function AboutPage() {
             Positioning
           </p>
           <p className="mt-4 text-base leading-8 text-ink/68">
-            The brand sits between premium streetwear, modern wellness, and introspective
-            self-improvement. The interface stays bold, bright, and grid-led, but the
-            emotional tone is calmer and more intelligent than standard ecommerce.
+            Wear the mood. Keep it lowkey. Feel good. Look clean.
           </p>
         </section>
 

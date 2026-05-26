@@ -18,7 +18,7 @@ export default async function CataloguePage() {
       <SectionHeading
         eyebrow="All products"
         title="Catalogue"
-        description="A mobile-first product grid with category, search, size, color, and price filters. Clean enough to feel premium, fast enough to browse like a catalogue."
+        description="Find your fit. Pick your mood."
       />
 
       <div className="mt-10">

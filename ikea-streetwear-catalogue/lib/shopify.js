@@ -510,7 +510,7 @@ function normalizeProduct(product) {
     metafields: contentMetafields,
     tags: product.tags,
     key: "productStory",
-    fallback: parsedDescription.summary || "Product story is managed in Shopify."
+    fallback: parsedDescription.summary || "Wear the mood."
   });
 
   return {
@@ -520,23 +520,23 @@ function normalizeProduct(product) {
     name: product.title,
     title: product.title,
     tagline:
-      firstSentence(parsedDescription.summary) || product.productType || "Mindful wardrobe piece",
+      firstSentence(parsedDescription.summary) || product.productType || "Quietly locked in.",
     category: product.productType || "T-Shirt",
     collection: primaryCollection?.title || "Mindful Wardrobe",
     collectionHandle: primaryCollection?.handle || null,
     collectionReferences: collections,
     price,
     compareAtPrice,
-    currency: product.priceRange?.minVariantPrice?.currencyCode || variants[0]?.currency || "USD",
+    currency: product.priceRange?.minVariantPrice?.currencyCode || variants[0]?.currency || "INR",
     colors: colorOption?.values ?? uniqueSelectedOptionValues(variants, "Color"),
     sizes: sizeOption?.values ?? uniqueSelectedOptionValues(variants, "Size"),
     options: product.options ?? [],
     variants,
     availableForSale: product.availableForSale,
-    fit: tagValue(product.tags, "fit") || "Shopify variant fit",
-    material: contentMetafields.material || tagValue(product.tags, "material") || "See Shopify product details",
+    fit: tagValue(product.tags, "fit") || "Regular fit",
+    material: contentMetafields.material || tagValue(product.tags, "material") || "",
     gsm: contentMetafields.gsm || tagValue(product.tags, "gsm") || "",
-    description: productStory || parsedDescription.summary || "Product details are managed in Shopify.",
+    description: productStory || parsedDescription.summary || "Wear the mood.",
     productStory,
     fullDescription: product.description || "",
     descriptionHtml: product.descriptionHtml,
@@ -549,7 +549,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "fabricDetails",
         tagPrefix: "fabric",
-        fallback: "Fabric details will be managed with Shopify metafields."
+        fallback: "Soft everyday feel."
       }),
     fitDetails:
       resolveProductContent({
@@ -558,7 +558,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "fitDetails",
         tagPrefix: "fitDetail",
-        fallback: "Fit notes will be managed with Shopify metafields."
+        fallback: "Easy regular fit."
       }),
     designInspiration:
       resolveProductContent({
@@ -567,7 +567,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "designInspiration",
         tagPrefix: "inspiration",
-        fallback: "Design inspiration will be managed with Shopify metafields."
+        fallback: "Low noise. High intent."
       }),
     careInstructions:
       resolveProductContent({
@@ -576,7 +576,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "careInstructions",
         tagPrefix: "care",
-        fallback: "Care instructions will be managed with Shopify metafields."
+        fallback: "Machine wash cold. Dry gently."
       }),
     designIntention:
       resolveProductContent({
@@ -587,14 +587,14 @@ function normalizeProduct(product) {
         tagPrefix: "intention",
         fallback:
           tagValue(product.tags, "mood") ||
-          "Mood and intention will be managed with Shopify metafields."
+          "Made for quiet wins."
       }),
     image: featuredImage?.url || "",
     imageAlt: featuredImage?.altText || product.title,
     images,
     accent: "accent",
-    mood: tagValue(product.tags, "mood") || primaryCollection?.title || "Mindful wardrobe",
-    artDirection: tagValue(product.tags, "art") || product.productType || "Shopify product",
+    mood: contentMetafields.designIntention || tagValue(product.tags, "mood") || primaryCollection?.title || "Wear the mood",
+    artDirection: tagValue(product.tags, "art") || product.productType || "Clean graphic tee",
     backgroundTheme: themeFromText(primaryCollection?.title || product.title)
   };
 }
@@ -613,7 +613,7 @@ function normalizeVariant(variant) {
     size: selectedOptions.find((option) => option.name.toLowerCase() === "size")?.value,
     price: Number(variant.price?.amount ?? 0),
     compareAtPrice: Number(variant.compareAtPrice?.amount ?? 0),
-    currency: variant.price?.currencyCode || "USD",
+    currency: variant.price?.currencyCode || "INR",
     image: normalizeImage(variant.image)
   };
 }
@@ -624,11 +624,11 @@ function normalizeCollection(collection) {
     handle: collection.handle,
     name: collection.title,
     title: collection.title,
-    description: collection.description || "A Shopify collection for the mindful wardrobe.",
+    description: collection.description || "A considered edit.",
     image: normalizeImage(collection.image),
     accentClass: accentClassFromText(collection.title),
     surfaceClass: surfaceClassFromText(collection.title),
-    mood: collection.description || "A considered edit from the Shopify catalogue.",
+    mood: collection.description || "A considered edit.",
     symbol: collection.title
   };
 }
@@ -680,7 +680,7 @@ function normalizeCart(cart) {
     items: lines,
     subtotal: Number(cart.cost?.subtotalAmount?.amount ?? 0),
     total: Number(cart.cost?.totalAmount?.amount ?? 0),
-    currency: cart.cost?.subtotalAmount?.currencyCode || "USD"
+    currency: cart.cost?.subtotalAmount?.currencyCode || "INR"
   };
 }
 
@@ -734,7 +734,7 @@ function detailsFromTags(tags = []) {
 
   return detailTags.length
     ? detailTags
-    : ["Managed in Shopify", "Availability synced from Storefront API"];
+    : ["Clean fit", "Low noise"];
 }
 
 function themeFromText(text = "") {
