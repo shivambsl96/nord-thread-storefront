@@ -31,14 +31,14 @@ export function ProductVisualStage({ product, images: visibleImages, selectedIma
 
   return (
     <div className="border border-ink/10 bg-white p-4">
-      <div className="relative mx-auto aspect-[4/5] max-h-[560px] max-w-[500px] overflow-hidden bg-mist">
+      <div className="relative mx-auto aspect-[4/5] max-h-[500px] max-w-[440px] overflow-hidden bg-mist">
         {heroImage?.url ? (
           <Image
             src={heroImage.url}
             alt={heroImage.altText || product.name}
             fill
             priority
-            className="p-6 object-contain transition duration-500 ease-out sm:p-8"
+            className="p-5 object-contain transition duration-500 ease-out sm:p-7"
             unoptimized
           />
         ) : (
@@ -76,7 +76,7 @@ export function ProductVisualStage({ product, images: visibleImages, selectedIma
               key={`${image.url}-${index}`}
               type="button"
               onClick={() => onSelectImage(image.url)}
-              className={`relative h-24 w-20 shrink-0 border bg-paper transition sm:h-28 sm:w-24 ${
+              className={`relative h-20 w-16 shrink-0 border bg-paper transition sm:h-24 sm:w-20 ${
                 heroImage?.url === image.url
                   ? "border-ink shadow-[inset_0_-3px_0_#ffcf3f]"
                   : "border-ink/10 hover:border-ink/45"

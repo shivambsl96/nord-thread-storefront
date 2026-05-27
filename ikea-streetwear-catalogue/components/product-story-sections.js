@@ -1,10 +1,6 @@
 export function ProductStorySections({ product }) {
   const sections = [
     {
-      label: "Story",
-      value: product.productStory
-    },
-    {
       label: "Fabric",
       value: product.fabricDetails
     },
@@ -13,16 +9,12 @@ export function ProductStorySections({ product }) {
       value: product.fitDetails
     },
     {
-      label: "Details",
-      value: product.designInspiration
-    },
-    {
       label: "Care",
       value: product.careInstructions
     },
     {
-      label: "Mood / intention",
-      value: product.designIntention
+      label: "Intent",
+      value: product.designIntention || product.designInspiration
     }
   ].filter((section, index, allSections) => {
     const value = normalizeText(section.value);
@@ -31,8 +23,8 @@ export function ProductStorySections({ product }) {
 
   if (!sections.length) {
     return (
-      <section className="mt-12 border-y border-ink/10 bg-white py-8">
-        <div className="border border-dashed border-ink/15 bg-paper p-5 text-sm leading-7 text-ink/60">
+      <section className="border-t border-ink/10 pt-5">
+        <div className="text-sm leading-7 text-ink/60">
           More details soon.
         </div>
       </section>
@@ -40,14 +32,17 @@ export function ProductStorySections({ product }) {
   }
 
   return (
-    <section className="mt-12 border-y border-ink/10 bg-white py-8">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <section className="border-t border-ink/10 pt-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
+        Product details
+      </p>
+      <div className="mt-4 divide-y divide-ink/10 border-y border-ink/10">
         {sections.map((section) => (
-          <article key={section.label} className="border border-ink/10 bg-paper p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-coral">
+          <article key={section.label} className="grid gap-2 py-4 sm:grid-cols-[120px,1fr]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">
               {section.label}
             </p>
-            <p className="mt-4 text-sm leading-7 text-ink/65">{section.value}</p>
+            <p className="text-sm leading-7 text-ink/68">{section.value}</p>
           </article>
         ))}
       </div>

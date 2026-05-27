@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { ProductDetailClient } from "@/components/product-detail-client";
-import { ProductStorySections } from "@/components/product-story-sections";
 import { getProductByHandle, getRelatedProducts } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
@@ -42,8 +41,6 @@ export default async function ProductDetailPage({ params }) {
         </Link>
 
         <ProductDetailClient product={product} />
-
-        <ProductStorySections product={product} />
 
         <section className="mt-14">
           <div className="flex items-end justify-between gap-4">

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ProductConfigurator } from "@/components/product-configurator";
+import { ProductStorySections } from "@/components/product-story-sections";
 import { ProductVisualStage } from "@/components/product-visual-stage";
 
 export function ProductDetailClient({ product }) {
@@ -38,7 +39,7 @@ export function ProductDetailClient({ product }) {
   }
 
   return (
-    <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,0.92fr),minmax(360px,0.82fr)] lg:items-start">
+    <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(320px,0.82fr),minmax(0,1fr)] lg:items-start">
       <ProductVisualStage
         product={product}
         images={galleryImages}
@@ -46,19 +47,16 @@ export function ProductDetailClient({ product }) {
         onSelectImage={setSelectedImageUrl}
       />
 
-      <div className="space-y-5 lg:sticky lg:top-24">
-        <div className="border border-ink/10 bg-white p-5">
+      <div className="space-y-5">
+        <div className="border border-ink/10 bg-white p-5 sm:p-6">
           <div className="flex flex-col gap-5 border-b border-ink/10 pb-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
                 {product.collection}
               </p>
-              <h1 className="mt-3 font-display text-4xl font-bold uppercase leading-[0.95] tracking-[0.08em] text-ink sm:text-5xl">
+              <h1 className="mt-3 font-display text-4xl font-bold uppercase leading-[0.92] tracking-[0.07em] text-ink sm:text-5xl lg:text-6xl">
                 {product.name}
               </h1>
-              <p className="mt-3 text-xs uppercase tracking-[0.2em] text-ink/45">
-                {product.handle}
-              </p>
             </div>
             <div className="whitespace-nowrap text-left sm:text-right">
               <p className="text-lg font-semibold uppercase tracking-[0.14em] text-ink">
@@ -72,8 +70,23 @@ export function ProductDetailClient({ product }) {
             </div>
           </div>
 
+          <figure className="mt-5 border-l-4 border-accent bg-paper px-5 py-5">
+            <blockquote className="font-display text-2xl font-bold uppercase leading-tight tracking-[0.06em] text-ink sm:text-3xl">
+              {product.hook}
+            </blockquote>
+          </figure>
+
+          <div className="mt-6 border-b border-ink/10 pb-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
+              Story / Intention
+            </p>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/68">
+              {product.productStory || product.designIntention}
+            </p>
+          </div>
+
           {product.collectionReferences?.length ? (
-            <div className="mt-5 border border-ink/10 bg-paper p-4">
+            <div className="mt-5">
               <p className="text-xs uppercase tracking-[0.18em] text-ink/45">
                 Collections
               </p>
@@ -82,25 +95,12 @@ export function ProductDetailClient({ product }) {
                   <Link
                     key={collection.id}
                     href={`/collections/${collection.handle}`}
-                    className="border border-ink/10 bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55 transition hover:border-ink"
+                    className="border border-ink/10 bg-paper px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55 transition hover:border-ink"
                   >
                     {collection.title}
                   </Link>
                 ))}
               </div>
-            </div>
-          ) : null}
-
-          {product.tags.length ? (
-            <div className="mt-5 flex flex-wrap gap-2">
-              {product.tags.slice(0, 8).map((tag) => (
-                <span
-                  key={tag}
-                  className="border border-ink/10 bg-paper px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-ink/48"
-                >
-                  {tag}
-                </span>
-              ))}
             </div>
           ) : null}
         </div>
@@ -111,6 +111,10 @@ export function ProductDetailClient({ product }) {
           selectedVariant={selectedVariant}
           onOptionChange={updateOption}
         />
+
+        <div className="border border-ink/10 bg-white p-5 sm:p-6">
+          <ProductStorySections product={product} />
+        </div>
       </div>
     </div>
   );

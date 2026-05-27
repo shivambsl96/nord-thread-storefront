@@ -18,6 +18,7 @@ const PRODUCT_CARD_FRAGMENT = `
     # These custom metafields are optional today and become the product detail content schema later.
     metafields(identifiers: [
       { namespace: "custom", key: "product_story" }
+      { namespace: "custom", key: "hook" }
       { namespace: "custom", key: "fabric_details" }
       { namespace: "custom", key: "fit_details" }
       { namespace: "custom", key: "design_inspiration" }
@@ -512,6 +513,11 @@ function normalizeProduct(product) {
     key: "productStory",
     fallback: parsedDescription.summary || "Wear the mood."
   });
+  const hook =
+    contentMetafields.hook ||
+    parsedDescription.sections.hook ||
+    firstSentence(parsedDescription.summary) ||
+    "Wear the mood.";
 
   return {
     id: product.id,
@@ -537,6 +543,7 @@ function normalizeProduct(product) {
     material: contentMetafields.material || tagValue(product.tags, "material") || "",
     gsm: contentMetafields.gsm || tagValue(product.tags, "gsm") || "",
     description: productStory || parsedDescription.summary || "Wear the mood.",
+    hook,
     productStory,
     fullDescription: product.description || "",
     descriptionHtml: product.descriptionHtml,

@@ -1,4 +1,5 @@
 const SECTION_LABELS = [
+  ["hook", ["hook", "quote", "headline"]],
   ["productStory", ["product story", "story", "description"]],
   ["fabricDetails", ["fabric details", "fabric", "material details"]],
   ["fitDetails", ["fit details", "fit"]],
@@ -85,6 +86,7 @@ export function hasStructuredProductContent(product) {
 function metafieldKeyToContentKey(key = "") {
   return {
     product_story: "productStory",
+    hook: "hook",
     fabric_details: "fabricDetails",
     fit_details: "fitDetails",
     design_inspiration: "designInspiration",
