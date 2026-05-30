@@ -30,15 +30,15 @@ export function ProductVisualStage({ product, images: visibleImages, selectedIma
   }
 
   return (
-    <div className="border border-ink/10 bg-white p-4">
-      <div className="relative mx-auto aspect-[4/5] max-h-[500px] max-w-[440px] overflow-hidden bg-mist">
+    <div>
+      <div className="product-gallery-main relative mx-auto aspect-[4/5] w-full max-w-[680px] overflow-hidden bg-mist lg:h-[min(70vh,720px)] lg:min-h-[460px] lg:max-w-none lg:aspect-auto">
         {heroImage?.url ? (
           <Image
             src={heroImage.url}
             alt={heroImage.altText || product.name}
             fill
             priority
-            className="p-5 object-contain transition duration-500 ease-out sm:p-7"
+            className="p-4 object-contain transition duration-500 ease-out sm:p-6"
             unoptimized
           />
         ) : (

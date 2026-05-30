@@ -11,29 +11,15 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
   );
 
   return (
-    <div className="border border-ink/10 bg-white p-5">
-      <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
-            Pick your mood.
-          </p>
-          <p className="mt-2 text-sm leading-6 text-ink/60">
-            Stay lowkey.
-          </p>
-        </div>
-        <p className="text-lg font-semibold uppercase tracking-[0.14em] text-ink">
-          {formatMoney(selectedVariant?.price ?? product.price, product.currency)}
-        </p>
-      </div>
-
-      <div className="mt-5 space-y-5">
+    <div className="space-y-5">
+      <div className="space-y-5">
         {selectableOptions.length ? (
           selectableOptions.map((option) => (
             <div key={option.id ?? option.name}>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink">
                 {option.name}
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2.5 flex flex-wrap gap-2">
                 {option.values.map((value) => {
                   const isSelected = selectedOptions[option.name] === value;
                   const canSelect = hasMatchingVariant(product.variants, {
@@ -47,7 +33,7 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
                       type="button"
                       disabled={!canSelect}
                       onClick={() => onOptionChange(option.name, value)}
-                      className={`border px-4 py-2 text-sm uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-35 ${
+                      className={`border px-3.5 py-2 text-sm uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-35 ${
                         isSelected
                           ? "border-ink bg-white text-ink shadow-[inset_0_-3px_0_#ffcf3f]"
                           : "border-ink/15 bg-paper text-ink hover:border-ink"
@@ -61,7 +47,7 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
             </div>
           ))
         ) : (
-          <div className="border border-ink/10 bg-paper p-4 text-sm leading-6 text-ink/60">
+          <div className="text-sm leading-6 text-ink/60">
             Single finish.
           </div>
         )}
@@ -85,7 +71,7 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
         ) : null}
 
         {justAdded ? (
-          <div className="surface-peace border border-ink/10 p-4">
+          <div className="surface-peace p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-coral">
               Added with thanks
             </p>
@@ -116,11 +102,4 @@ function hasMatchingVariant(variants, nextOptions) {
   return variants.some((variant) =>
     variant.selectedOptions.every((option) => nextOptions[option.name] === option.value)
   );
-}
-
-function formatMoney(amount, currency = "INR") {
-  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
-    style: "currency",
-    currency
-  }).format(Number(amount));
 }

@@ -11,38 +11,28 @@ export function ProductStorySections({ product }) {
     {
       label: "Care",
       value: product.careInstructions
-    },
-    {
-      label: "Intent",
-      value: product.designIntention || product.designInspiration
     }
   ].filter((section, index, allSections) => {
     const value = normalizeText(section.value);
     return value && allSections.findIndex((item) => normalizeText(item.value) === value) === index;
   });
 
-  if (!sections.length) {
-    return (
-      <section className="border-t border-ink/10 pt-5">
-        <div className="text-sm leading-7 text-ink/60">
-          More details soon.
-        </div>
-      </section>
-    );
-  }
+  if (!sections.length) return null;
 
   return (
-    <section className="border-t border-ink/10 pt-5">
+    <section className="pt-2">
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
-        Product details
+        Product notes
       </p>
-      <div className="mt-4 divide-y divide-ink/10 border-y border-ink/10">
+      <div className="mt-4 grid gap-6 md:grid-cols-3">
         {sections.map((section) => (
-          <article key={section.label} className="grid gap-2 py-4 sm:grid-cols-[120px,1fr]">
+          <article key={section.label} className="space-y-3 border-t border-ink/8 pt-5">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">
               {section.label}
             </p>
-            <p className="text-sm leading-7 text-ink/68">{section.value}</p>
+            <p className="text-sm leading-7 text-ink/76">
+              {section.value}
+            </p>
           </article>
         ))}
       </div>

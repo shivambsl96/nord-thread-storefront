@@ -511,13 +511,16 @@ function normalizeProduct(product) {
     metafields: contentMetafields,
     tags: product.tags,
     key: "productStory",
-    fallback: parsedDescription.summary || "Wear the mood."
+    fallback: parsedDescription.mainDescription || product.description || ""
   });
   const hook =
     contentMetafields.hook ||
-    parsedDescription.sections.hook ||
-    firstSentence(parsedDescription.summary) ||
-    "Wear the mood.";
+    parsedDescription.hook ||
+    "";
+  const inspiration =
+    contentMetafields.designInspiration ||
+    parsedDescription.inspiration ||
+    "";
 
   return {
     id: product.id,
@@ -525,8 +528,7 @@ function normalizeProduct(product) {
     slug: product.handle,
     name: product.title,
     title: product.title,
-    tagline:
-      firstSentence(parsedDescription.summary) || product.productType || "Quietly locked in.",
+    tagline: firstSentence(parsedDescription.mainDescription) || product.productType || "",
     category: product.productType || "T-Shirt",
     collection: primaryCollection?.title || "Mindful Wardrobe",
     collectionHandle: primaryCollection?.handle || null,
@@ -542,8 +544,10 @@ function normalizeProduct(product) {
     fit: tagValue(product.tags, "fit") || "Regular fit",
     material: contentMetafields.material || tagValue(product.tags, "material") || "",
     gsm: contentMetafields.gsm || tagValue(product.tags, "gsm") || "",
-    description: productStory || parsedDescription.summary || "Wear the mood.",
+    description: productStory || parsedDescription.mainDescription || product.description || "",
+    mainDescription: parsedDescription.mainDescription || product.description || "",
     hook,
+    inspiration,
     productStory,
     fullDescription: product.description || "",
     descriptionHtml: product.descriptionHtml,
@@ -556,7 +560,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "fabricDetails",
         tagPrefix: "fabric",
-        fallback: "Soft everyday feel."
+        fallback: ""
       }),
     fitDetails:
       resolveProductContent({
@@ -565,7 +569,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "fitDetails",
         tagPrefix: "fitDetail",
-        fallback: "Easy regular fit."
+        fallback: ""
       }),
     designInspiration:
       resolveProductContent({
@@ -574,7 +578,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "designInspiration",
         tagPrefix: "inspiration",
-        fallback: "Low noise. High intent."
+        fallback: inspiration
       }),
     careInstructions:
       resolveProductContent({
@@ -583,7 +587,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "careInstructions",
         tagPrefix: "care",
-        fallback: "Machine wash cold. Dry gently."
+        fallback: ""
       }),
     designIntention:
       resolveProductContent({
@@ -592,9 +596,7 @@ function normalizeProduct(product) {
         tags: product.tags,
         key: "designIntention",
         tagPrefix: "intention",
-        fallback:
-          tagValue(product.tags, "mood") ||
-          "Made for quiet wins."
+        fallback: tagValue(product.tags, "mood") || inspiration
       }),
     image: featuredImage?.url || "",
     imageAlt: featuredImage?.altText || product.title,

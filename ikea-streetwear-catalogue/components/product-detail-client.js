@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { ProductConfigurator } from "@/components/product-configurator";
 import { ProductStorySections } from "@/components/product-story-sections";
 import { ProductVisualStage } from "@/components/product-visual-stage";
@@ -39,85 +38,151 @@ export function ProductDetailClient({ product }) {
   }
 
   return (
-    <div className="mt-5 grid gap-7 lg:grid-cols-[minmax(320px,0.82fr),minmax(0,1fr)] lg:items-start">
-      <ProductVisualStage
-        product={product}
-        images={galleryImages}
-        selectedImageUrl={selectedImageUrl}
-        onSelectImage={setSelectedImageUrl}
-      />
+    <div className="product-page mt-7 space-y-14 lg:mt-9 lg:space-y-16">
+      <section className="product-detail-hero grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(380px,0.92fr)] lg:items-start lg:gap-14">
+        <div className="product-gallery-column min-w-0">
+          <ProductVisualStage
+            product={product}
+            images={galleryImages}
+            selectedImageUrl={selectedImageUrl}
+            onSelectImage={setSelectedImageUrl}
+          />
+        </div>
 
-      <div className="space-y-5">
-        <div className="border border-ink/10 bg-white p-5 sm:p-6">
-          <div className="flex flex-col gap-5 border-b border-ink/10 pb-5 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
-                {product.collection}
+        <div className="product-purchase-panel min-w-0 lg:sticky lg:top-28">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
+            {product.collection}
+          </p>
+          <h1 className="mt-3 max-w-3xl font-display text-3xl font-bold uppercase leading-[0.94] tracking-[0.07em] text-ink sm:text-4xl xl:text-5xl">
+            {product.name}
+          </h1>
+          <div className="mt-5">
+            <p className="text-xl font-semibold uppercase tracking-[0.14em] text-ink">
+              {formatMoney(selectedVariant?.price ?? product.price, selectedVariant?.currency ?? product.currency)}
+            </p>
+            {selectedVariant?.compareAtPrice || product.compareAtPrice ? (
+              <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink/38 line-through">
+                {formatMoney(selectedVariant?.compareAtPrice || product.compareAtPrice, product.currency)}
               </p>
-              <h1 className="mt-3 font-display text-4xl font-bold uppercase leading-[0.92] tracking-[0.07em] text-ink sm:text-5xl lg:text-6xl">
-                {product.name}
-              </h1>
-            </div>
-            <div className="whitespace-nowrap text-left sm:text-right">
-              <p className="text-lg font-semibold uppercase tracking-[0.14em] text-ink">
-                {formatMoney(selectedVariant?.price ?? product.price, selectedVariant?.currency ?? product.currency)}
-              </p>
-              {selectedVariant?.compareAtPrice || product.compareAtPrice ? (
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink/38 line-through">
-                  {formatMoney(selectedVariant?.compareAtPrice || product.compareAtPrice, product.currency)}
-                </p>
+            ) : null}
+          </div>
+
+          {(product.hook || product.inspiration) ? (
+            <div className="my-7 border-y border-ink/10 py-6">
+              {product.hook ? (
+                <figure>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
+                    Hook
+                  </p>
+                  <blockquote className="mt-3 max-w-xl text-balance font-display text-2xl font-bold uppercase leading-[0.98] tracking-[0.05em] text-ink sm:text-3xl">
+                    {product.hook}
+                  </blockquote>
+                </figure>
+              ) : null}
+
+              {product.inspiration ? (
+                <div className={product.hook ? "mt-6" : ""}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
+                    Inspiration
+                  </p>
+                  <p className="mt-3 max-w-xl text-base leading-7 text-ink/68">
+                    {product.inspiration}
+                  </p>
+                </div>
               ) : null}
             </div>
-          </div>
-
-          <figure className="mt-5 border-l-4 border-accent bg-paper px-5 py-5">
-            <blockquote className="font-display text-2xl font-bold uppercase leading-tight tracking-[0.06em] text-ink sm:text-3xl">
-              {product.hook}
-            </blockquote>
-          </figure>
-
-          <div className="mt-6 border-b border-ink/10 pb-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
-              Story / Intention
-            </p>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-ink/68">
-              {product.productStory || product.designIntention}
-            </p>
-          </div>
-
-          {product.collectionReferences?.length ? (
-            <div className="mt-5">
-              <p className="text-xs uppercase tracking-[0.18em] text-ink/45">
-                Collections
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {product.collectionReferences.map((collection) => (
-                  <Link
-                    key={collection.id}
-                    href={`/collections/${collection.handle}`}
-                    className="border border-ink/10 bg-paper px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/55 transition hover:border-ink"
-                  >
-                    {collection.title}
-                  </Link>
-                ))}
-              </div>
-            </div>
           ) : null}
-        </div>
 
-        <ProductConfigurator
-          product={product}
-          selectedOptions={selectedOptions}
-          selectedVariant={selectedVariant}
-          onOptionChange={updateOption}
-        />
-
-        <div className="border border-ink/10 bg-white p-5 sm:p-6">
-          <ProductStorySections product={product} />
+          <ProductConfigurator
+            product={product}
+            selectedOptions={selectedOptions}
+            selectedVariant={selectedVariant}
+            onOptionChange={updateOption}
+          />
         </div>
+      </section>
+
+      <section className="product-story-section border-t border-ink/10 pt-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
+          Details
+        </p>
+        <MainDescription text={product.mainDescription || product.description} />
+      </section>
+
+      <ProductStorySections product={product} />
+    </div>
+  );
+}
+
+function MainDescription({ text }) {
+  const blocks = cleanDescriptionBlocks(splitDescriptionBlocks(text));
+
+  if (!blocks.length) {
+    return null;
+  }
+
+  const [opening, ...rest] = blocks;
+
+  return (
+    <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(260px,0.5fr),minmax(0,0.75fr)] lg:gap-14">
+      <p className="max-w-xl font-display text-2xl font-bold uppercase leading-tight tracking-[0.06em] text-ink sm:text-3xl">
+        {opening}
+      </p>
+      <div className="max-w-3xl space-y-4 text-base leading-8 text-ink/72">
+        {rest.map((block, index) =>
+          isBulletLine(block) ? (
+            <div
+              key={`${block}-${index}`}
+              className="grid grid-cols-[1.5rem,1fr] items-start gap-2 text-sm leading-7 text-ink/70"
+            >
+              <span aria-hidden className="text-coral">
+                {extractBullet(block)}
+              </span>
+              <span>{stripBullet(block)}</span>
+            </div>
+          ) : (
+            <p key={`${block}-${index}`}>{block}</p>
+          )
+        )}
       </div>
     </div>
   );
+}
+
+function splitDescriptionBlocks(text = "") {
+  return String(text)
+    .split(/\n+/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+}
+
+function cleanDescriptionBlocks(blocks = []) {
+  return blocks
+    .map((block) => stripDecorativeSymbols(block))
+    .filter((block) => block && !isDecorativeOnly(block));
+}
+
+function isBulletLine(value = "") {
+  return /^(•|-|\*)\s*/u.test(value.trim());
+}
+
+function extractBullet(value = "") {
+  const match = value.trim().match(/^(•|-|\*)/u);
+  return match?.[0] === "-" || match?.[0] === "*" ? "•" : match?.[0] || "•";
+}
+
+function stripBullet(value = "") {
+  return stripDecorativeSymbols(value).replace(/^(•|-|\*)\s*/u, "");
+}
+
+function stripDecorativeSymbols(value = "") {
+  return String(value)
+    .replace(/^[\s✨⭐✦✧✶✷✸✹❋❊•*-]+/u, "")
+    .trim();
+}
+
+function isDecorativeOnly(value = "") {
+  return /^[\s✨⭐✦✧✶✷✸✹❋❊•*-]+$/u.test(String(value).trim());
 }
 
 function findSelectedVariant(variants, selectedOptions) {

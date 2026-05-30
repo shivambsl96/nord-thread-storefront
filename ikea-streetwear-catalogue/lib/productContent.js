@@ -1,11 +1,10 @@
 const SECTION_LABELS = [
+  ["fabric", ["fabric"]],
+  ["fit", ["fit"]],
+  ["care", ["care"]],
   ["hook", ["hook", "quote", "headline"]],
-  ["productStory", ["product story", "story", "description"]],
-  ["fabricDetails", ["fabric details", "fabric", "material details"]],
-  ["fitDetails", ["fit details", "fit"]],
-  ["designInspiration", ["design inspiration", "inspiration", "design notes"]],
-  ["careInstructions", ["care instructions", "care"]],
-  ["designIntention", ["mood / intention", "mood", "intention", "intention behind the design"]]
+  ["inspiration", ["inspiration"]],
+  ["mood", ["mood", "intention", "mood / intention", "intention behind the design"]]
 ];
 
 const SECTION_KEYS = SECTION_LABELS.map(([key]) => key);
@@ -17,7 +16,7 @@ export function parseProductDescription(description = "") {
 
   for (const [key, labels] of SECTION_LABELS) {
     for (const label of labels) {
-      const pattern = new RegExp(`(^|\\n)\\s*${escapeRegExp(label)}\\s*:?\\s*`, "i");
+      const pattern = new RegExp(`(^|\\n)\\s*${escapeRegExp(label)}\\s*:\\s*`, "i");
       const match = pattern.exec(text);
 
       if (match) {
@@ -52,7 +51,22 @@ export function parseProductDescription(description = "") {
 
   return {
     summary: summary || text,
-    sections
+    mainDescription: summary || text,
+    fabric: sections.fabric || "",
+    fit: sections.fit || "",
+    care: sections.care || "",
+    hook: sections.hook || "",
+    inspiration: sections.inspiration || "",
+    mood: sections.mood || "",
+    sections: {
+      ...sections,
+      productStory: summary || text,
+      fabricDetails: sections.fabric || "",
+      fitDetails: sections.fit || "",
+      careInstructions: sections.care || "",
+      designInspiration: sections.inspiration || "",
+      designIntention: sections.mood || sections.inspiration || ""
+    }
   };
 }
 
@@ -103,11 +117,18 @@ function normalizeDescription(description = "") {
   const value = String(description);
   const text = /<\/?[a-z][\s\S]*>/i.test(value) ? htmlToText(value) : value;
 
-  return text
+  return breakSectionLabels(text)
     .replace(/\r\n/g, "\n")
     .replace(/\u00a0/g, " ")
     .replace(/[ \t]+\n/g, "\n")
     .trim();
+}
+
+function breakSectionLabels(text = "") {
+  return String(text).replace(
+    /([^\n])\s+(Fabric|Fit|Care|Hook|Inspiration|Mood|Intention|Mood \/ Intention)\s*:/gi,
+    "$1\n$2:"
+  );
 }
 
 function htmlToText(html = "") {

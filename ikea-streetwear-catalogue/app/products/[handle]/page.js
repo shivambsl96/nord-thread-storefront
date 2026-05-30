@@ -32,7 +32,7 @@ export default async function ProductDetailPage({ params }) {
 
   return (
     <div className="bg-paper">
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+      <section className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
         <Link
           href="/catalogue"
           className="text-xs font-semibold uppercase tracking-[0.22em] text-ink/55"
