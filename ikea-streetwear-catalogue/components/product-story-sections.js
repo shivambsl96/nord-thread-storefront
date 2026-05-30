@@ -20,11 +20,11 @@ export function ProductStorySections({ product }) {
   if (!sections.length) return null;
 
   return (
-    <section className="pt-2">
+    <section>
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-coral">
         Product notes
       </p>
-      <div className="mt-4 grid gap-6 md:grid-cols-3">
+      <div className="mt-4 grid gap-5">
         {sections.map((section) => (
           <article key={section.label} className="space-y-3 border-t border-ink/8 pt-5">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink/45">

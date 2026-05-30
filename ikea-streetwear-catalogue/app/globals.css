@@ -150,6 +150,12 @@ a {
     align-items: start;
   }
 
+  .product-details-grid {
+    grid-template-columns: minmax(0, 0.78fr) minmax(300px, 0.42fr);
+    gap: 56px;
+    align-items: start;
+  }
+
   .product-purchase-panel {
     max-width: 560px;
   }

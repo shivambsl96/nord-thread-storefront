@@ -3,7 +3,7 @@
 import { useCart } from "@/components/cart-provider";
 
 export function CartStatus() {
-  const { itemCount, reward, setIsDrawerOpen } = useCart();
+  const { itemCount, setIsDrawerOpen } = useCart();
 
   return (
     <button
@@ -19,7 +19,7 @@ export function CartStatus() {
           Cart
         </span>
         <span className="block text-sm uppercase tracking-[0.14em] text-ink">
-          {reward.unlocked ? `${reward.percentage}% unlocked` : "Wardrobe"}
+          Wardrobe
         </span>
       </span>
     </button>

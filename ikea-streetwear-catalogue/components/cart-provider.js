@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { calculateGratitudeReward } from "@/lib/storefront";
 import { addCartLines, createCart, getCart, removeCartLines, updateCartLines } from "@/lib/shopify";
 
 const CartContext = createContext(null);
@@ -128,7 +127,6 @@ export function CartProvider({ children }) {
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = cart?.subtotal ?? 0;
   const currency = cart?.currency ?? items[0]?.cost?.currency ?? "INR";
-  const reward = calculateGratitudeReward(itemCount);
 
   return (
     <CartContext.Provider
@@ -138,7 +136,6 @@ export function CartProvider({ children }) {
         itemCount,
         subtotal,
         currency,
-        reward,
         checkoutUrl: cart?.checkoutUrl ?? "",
         isDrawerOpen,
         isReady,

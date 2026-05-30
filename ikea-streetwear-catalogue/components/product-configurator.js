@@ -5,7 +5,7 @@ import { useCart } from "@/components/cart-provider";
 
 export function ProductConfigurator({ product, selectedOptions, selectedVariant, onOptionChange }) {
   const [justAdded, setJustAdded] = useState(false);
-  const { addItem, error, isUpdating, itemCount, reward } = useCart();
+  const { addItem, error, isUpdating } = useCart();
   const selectableOptions = (product.options ?? []).filter(
     (option) => !(option.name === "Title" && option.values.length === 1 && option.values[0] === "Default Title")
   );
@@ -20,7 +20,7 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
                 {option.name}
               </p>
               <div className="mt-2.5 flex flex-wrap gap-2">
-                {option.values.map((value) => {
+                {sortOptionValues(option).map((value) => {
                   const isSelected = selectedOptions[option.name] === value;
                   const canSelect = hasMatchingVariant(product.variants, {
                     ...selectedOptions,
@@ -76,30 +76,44 @@ export function ProductConfigurator({ product, selectedOptions, selectedVariant,
               Added with thanks
             </p>
             <p className="mt-2 text-sm leading-6 text-ink/68">
-              {reward.unlocked
-                ? `You've unlocked a gratitude reward of ${reward.percentage}%.`
-                : "Added. Quietly locked in."}
+              Added. Quietly locked in.
             </p>
           </div>
-        ) : null}
-
-        {itemCount > 0 && !reward.unlocked && reward.nextTier ? (
-          <p className="text-xs uppercase tracking-[0.18em] text-ink/45">
-            Add {formatPieceCount(reward.nextTier.quantity - itemCount)} to unlock a{" "}
-            {reward.nextTier.percentage}% gratitude reward.
-          </p>
         ) : null}
       </div>
     </div>
   );
 }
 
-function formatPieceCount(count) {
-  return `${count} ${count === 1 ? "piece" : "pieces"}`;
-}
-
 function hasMatchingVariant(variants, nextOptions) {
   return variants.some((variant) =>
     variant.selectedOptions.every((option) => nextOptions[option.name] === option.value)
   );
+}
+
+function sortOptionValues(option) {
+  if (!isSizeOption(option.name)) {
+    return option.values;
+  }
+
+  return [...option.values].sort(compareSizes);
+}
+
+function isSizeOption(name = "") {
+  return name.toLowerCase() === "size";
+}
+
+function compareSizes(left, right) {
+  const sizeOrder = ["xxs", "xs", "s", "m", "l", "xl", "xxl", "xxxl"];
+  const leftIndex = sizeOrder.indexOf(String(left).toLowerCase());
+  const rightIndex = sizeOrder.indexOf(String(right).toLowerCase());
+
+  if (leftIndex === -1 && rightIndex === -1) {
+    return String(left).localeCompare(String(right), undefined, { numeric: true });
+  }
+
+  if (leftIndex === -1) return 1;
+  if (rightIndex === -1) return -1;
+
+  return leftIndex - rightIndex;
 }

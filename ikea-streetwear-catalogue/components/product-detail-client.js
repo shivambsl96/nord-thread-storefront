@@ -71,9 +71,6 @@ export function ProductDetailClient({ product }) {
             <div className="my-7 border-y border-ink/10 py-6">
               {product.hook ? (
                 <figure>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
-                    Hook
-                  </p>
                   <blockquote className="mt-3 max-w-xl text-balance font-display text-2xl font-bold uppercase leading-[0.98] tracking-[0.05em] text-ink sm:text-3xl">
                     {product.hook}
                   </blockquote>
@@ -82,9 +79,6 @@ export function ProductDetailClient({ product }) {
 
               {product.inspiration ? (
                 <div className={product.hook ? "mt-6" : ""}>
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
-                    Inspiration
-                  </p>
                   <p className="mt-3 max-w-xl text-base leading-7 text-ink/68">
                     {product.inspiration}
                   </p>
@@ -106,10 +100,11 @@ export function ProductDetailClient({ product }) {
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
           Details
         </p>
-        <MainDescription text={product.mainDescription || product.description} />
+        <div className="product-details-grid mt-5 grid gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(300px,0.42fr)] lg:gap-14">
+          <MainDescription text={product.mainDescription || product.description} />
+          <ProductStorySections product={product} />
+        </div>
       </section>
-
-      <ProductStorySections product={product} />
     </div>
   );
 }
@@ -124,7 +119,7 @@ function MainDescription({ text }) {
   const [opening, ...rest] = blocks;
 
   return (
-    <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(260px,0.5fr),minmax(0,0.75fr)] lg:gap-14">
+    <div className="grid gap-6">
       <p className="max-w-xl font-display text-2xl font-bold uppercase leading-tight tracking-[0.06em] text-ink sm:text-3xl">
         {opening}
       </p>

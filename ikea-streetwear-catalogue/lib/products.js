@@ -2,6 +2,7 @@ import {
   applyCollectionStory,
   createPlaceholderCollection,
   getCollectionStory,
+  getShopifyCollectionHandle,
   mergeCollectionsWithPlaceholders
 } from "@/lib/collectionStories";
 import {
@@ -63,7 +64,8 @@ export async function getCollections() {
 }
 
 export async function getCollectionByHandle(handle) {
-  const collection = await getCatalogueCollectionByHandle(handle);
+  const shopifyHandle = getShopifyCollectionHandle(handle);
+  const collection = await getCatalogueCollectionByHandle(shopifyHandle);
   const story = getCollectionStory(handle) ?? getCollectionStory(collection?.title);
 
   if (collection && story) {
@@ -75,6 +77,6 @@ export async function getCollectionByHandle(handle) {
 }
 
 export async function getProductsByCollection(collectionHandle) {
-  const collection = await getCatalogueCollectionByHandle(collectionHandle);
+  const collection = await getCatalogueCollectionByHandle(getShopifyCollectionHandle(collectionHandle));
   return collection?.products ?? [];
 }

@@ -52,18 +52,18 @@ export function ProductVisualStage({ product, images: visibleImages, selectedIma
             <button
               type="button"
               onClick={() => selectOffset(-1)}
-              className="border border-ink/10 bg-white/88 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink shadow-sm backdrop-blur transition hover:bg-white"
+              className="flex h-10 w-10 items-center justify-center border border-ink/10 bg-white/75 text-xl leading-none text-ink/70 shadow-sm backdrop-blur transition hover:border-ink/25 hover:bg-white hover:text-ink"
               aria-label="Previous product image"
             >
-              Prev
+              <span aria-hidden>‹</span>
             </button>
             <button
               type="button"
               onClick={() => selectOffset(1)}
-              className="border border-ink/10 bg-white/88 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink shadow-sm backdrop-blur transition hover:bg-white"
+              className="flex h-10 w-10 items-center justify-center border border-ink/10 bg-white/75 text-xl leading-none text-ink/70 shadow-sm backdrop-blur transition hover:border-ink/25 hover:bg-white hover:text-ink"
               aria-label="Next product image"
             >
-              Next
+              <span aria-hidden>›</span>
             </button>
           </div>
         ) : null}

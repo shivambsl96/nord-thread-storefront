@@ -1,6 +1,7 @@
 export const collectionStories = [
   {
     handle: "focus",
+    shopifyHandle: "focus",
     title: "Focus",
     name: "Focus",
     symbol: "One clear line",
@@ -18,10 +19,11 @@ export const collectionStories = [
     surfaceClass: "surface-focus",
     accentClass: "bg-accent",
     actionLabel: "Explore Focus",
-    sortOrder: 1
+    sortOrder: 2
   },
   {
     handle: "peace",
+    shopifyHandle: "peace",
     title: "Peace",
     name: "Peace",
     symbol: "Soft horizon",
@@ -39,10 +41,11 @@ export const collectionStories = [
     surfaceClass: "surface-peace",
     accentClass: "bg-sky",
     actionLabel: "Explore Peace",
-    sortOrder: 2
+    sortOrder: 1
   },
   {
     handle: "discipline",
+    shopifyHandle: "discipline",
     title: "Discipline",
     name: "Discipline",
     symbol: "Daily structure",
@@ -64,6 +67,8 @@ export const collectionStories = [
   },
   {
     handle: "manifest",
+    shopifyHandle: "manifesting",
+    aliases: ["manifesting"],
     title: "Manifest",
     name: "Manifest",
     symbol: "Quiet intention",
@@ -84,28 +89,31 @@ export const collectionStories = [
     sortOrder: 3
   },
   {
-    handle: "stillness",
-    title: "Stillness",
-    name: "Stillness",
-    symbol: "Pause mark",
-    shortSubtitle: "Empty space, zen, silence",
-    mood: "Presence / silence / nervous-system ease",
-    moodWords: ["Empty", "Quiet", "Present"],
+    handle: "patience",
+    shopifyHandle: "patience",
+    title: "Patience",
+    name: "Patience",
+    symbol: "Quiet timing",
+    shortSubtitle: "Measured, soft, quietly steady",
+    mood: "Timing / trust / softer consistency",
+    moodWords: ["Patient", "Steady", "Soft"],
     shortStory:
-      "For slow mornings, quiet evenings, and the discipline of not filling every space.",
+      "For the days when becoming better means staying gentle with the process.",
     story:
-      "Stillness gives the collection room to breathe. The pieces should feel like pauses in the wardrobe, not statements fighting for attention.",
+      "Patience is built around quiet timing: pieces that hold space for trust, softness, and the slow confidence of continuing without rushing the outcome.",
     themeColor: "#f8f3e8",
     textColor: "#111111",
-    backgroundPattern: "/assets/patterns/stillness-pattern.png",
-    heroImage: "/assets/collections/stillness-hero.png",
+    backgroundPattern: "/assets/patterns/patience-pattern.png",
+    heroImage: "/assets/collections/patience-hero.png",
     surfaceClass: "surface-stillness",
     accentClass: "bg-sky",
-    actionLabel: "Explore Stillness",
+    actionLabel: "Explore Patience",
     sortOrder: 5
   },
   {
     handle: "growth",
+    shopifyHandle: "grow",
+    aliases: ["grow"],
     title: "Growth",
     name: "Growth",
     symbol: "Small increments",
@@ -129,16 +137,30 @@ export const collectionStories = [
 
 export const collectionStoryOrder = [...collectionStories]
   .sort((left, right) => left.sortOrder - right.sortOrder)
-  .map((collection) => collection.handle);
+  .map((collection) => collection.shopifyHandle ?? collection.handle);
 
-export const approvedCollectionHandles = new Set(collectionStoryOrder);
+export const approvedCollectionHandles = new Set(
+  collectionStories.flatMap((collection) => [
+    collection.handle,
+    collection.shopifyHandle,
+    ...(collection.aliases ?? [])
+  ].filter(Boolean))
+);
 
 export function getCollectionStory(value = "") {
   const normalized = normalizeHandle(value);
   return collectionStories.find(
     (collection) =>
-      collection.handle === normalized || normalizeHandle(collection.name) === normalized
+      collection.handle === normalized ||
+      collection.shopifyHandle === normalized ||
+      (collection.aliases ?? []).includes(normalized) ||
+      normalizeHandle(collection.name) === normalized
   );
+}
+
+export function getShopifyCollectionHandle(value = "") {
+  const story = getCollectionStory(value);
+  return story?.shopifyHandle ?? normalizeHandle(value);
 }
 
 export function applyCollectionStory(collection) {
@@ -169,7 +191,8 @@ export function applyCollectionStory(collection) {
     accentClass: story?.accentClass ?? collection.accentClass ?? "bg-accent",
     actionLabel: story?.actionLabel ?? `Shop ${collection.name ?? collection.title}`,
     sortOrder: story?.sortOrder ?? Number.MAX_SAFE_INTEGER,
-    storyHandle: story?.handle ?? null
+    storyHandle: story?.handle ?? null,
+    canonicalHandle: story?.handle ?? collection.handle
   };
 }
 
@@ -191,12 +214,8 @@ export function mergeCollectionsWithPlaceholders(collections = []) {
     .filter((collection) => approvedCollectionHandles.has(normalizeHandle(collection.handle)))
     .map(applyCollectionStory)
     .filter(Boolean);
-  const existingHandles = new Set(enrichedCollections.map((collection) => collection.handle));
-  const placeholders = collectionStories
-    .filter((story) => !existingHandles.has(story.handle))
-    .map(createPlaceholderCollection);
 
-  return orderCollectionsByStories([...enrichedCollections, ...placeholders]);
+  return orderCollectionsByStories(enrichedCollections);
 }
 
 export function orderCollectionsByStories(collections = []) {
@@ -217,7 +236,8 @@ function collectionRank(collection) {
     getCollectionStory(collection.storyHandle) ??
     getCollectionStory(collection.handle) ??
     getCollectionStory(collection.title);
-  const index = story ? collectionStoryOrder.indexOf(story.handle) : -1;
+  const storyHandle = story?.shopifyHandle ?? story?.handle;
+  const index = storyHandle ? collectionStoryOrder.indexOf(storyHandle) : -1;
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 }
 

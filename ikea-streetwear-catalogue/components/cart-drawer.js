@@ -9,7 +9,6 @@ export function CartDrawer() {
     itemCount,
     subtotal,
     currency,
-    reward,
     checkout,
     checkoutUrl,
     error,
@@ -48,32 +47,6 @@ export function CartDrawer() {
             Close
           </button>
         </div>
-
-        {reward.unlocked ? (
-          <div className="surface-peace border-b border-ink/10 px-5 py-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-coral">
-              Appreciation reward
-            </p>
-            <p className="mt-2 font-display text-2xl font-bold uppercase tracking-[0.06em] text-ink">
-              You&apos;ve unlocked {reward.percentage}%
-            </p>
-            <p className="mt-2 text-sm leading-6 text-ink/68">
-              Thanks for backing the brand.
-            </p>
-          </div>
-        ) : null}
-
-        {!reward.unlocked && reward.nextTier ? (
-          <div className="border-b border-ink/10 bg-white px-5 py-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/45">
-              Gratitude reward
-            </p>
-            <p className="mt-2 text-sm leading-6 text-ink/68">
-              Add {formatPieceCount(reward.nextTier.quantity - itemCount)} to unlock a{" "}
-              {reward.nextTier.percentage}% gratitude reward.
-            </p>
-          </div>
-        ) : null}
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
           {items.length === 0 ? (

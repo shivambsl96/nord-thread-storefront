@@ -141,8 +141,8 @@ export default async function HomePage() {
               text="Easy tees. Better days."
             />
             <LifestyleTile
-              title="Subtle reward"
-              text="A small thanks when your cart grows."
+              title="Conscious rotation"
+              text="Pieces made with intention."
             />
           </div>
         </div>

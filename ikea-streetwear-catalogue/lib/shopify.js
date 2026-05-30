@@ -233,11 +233,19 @@ export async function getProductByHandle(handle) {
 export async function getCollections({ first = 12 } = {}) {
   const query = `
     ${COLLECTION_FRAGMENT}
+    ${PRODUCT_CARD_FRAGMENT}
     query Collections($first: Int!) {
       collections(first: $first, sortKey: TITLE) {
         edges {
           node {
             ...CollectionFields
+            products(first: 4) {
+              edges {
+                node {
+                  ...ProductCard
+                }
+              }
+            }
           }
         }
       }
@@ -251,7 +259,10 @@ export async function getCollections({ first = 12 } = {}) {
     tags: ["collections"]
   });
 
-  return toEdges(response.data?.collections).map(normalizeCollection);
+  return toEdges(response.data?.collections).map((collection) => ({
+    ...normalizeCollection(collection),
+    products: toEdges(collection.products).map(normalizeProduct)
+  }));
 }
 
 export async function getCollectionByHandle(handle, { productsFirst = 24 } = {}) {
@@ -537,8 +548,8 @@ function normalizeProduct(product) {
     compareAtPrice,
     currency: product.priceRange?.minVariantPrice?.currencyCode || variants[0]?.currency || "INR",
     colors: colorOption?.values ?? uniqueSelectedOptionValues(variants, "Color"),
-    sizes: sizeOption?.values ?? uniqueSelectedOptionValues(variants, "Size"),
-    options: product.options ?? [],
+    sizes: sortSizeValues(sizeOption?.values ?? uniqueSelectedOptionValues(variants, "Size")),
+    options: normalizeOptions(product.options ?? []),
     variants,
     availableForSale: product.availableForSale,
     fit: tagValue(product.tags, "fit") || "Regular fit",
@@ -725,6 +736,31 @@ function uniqueSelectedOptionValues(variants, name) {
         .filter(Boolean)
     )
   ];
+}
+
+function normalizeOptions(options = []) {
+  return options.map((option) => ({
+    ...option,
+    values: option.name.toLowerCase() === "size" ? sortSizeValues(option.values) : option.values
+  }));
+}
+
+function sortSizeValues(values = []) {
+  const sizeOrder = ["xxs", "xs", "s", "m", "l", "xl", "xxl", "xxxl"];
+
+  return [...values].sort((left, right) => {
+    const leftIndex = sizeOrder.indexOf(String(left).toLowerCase());
+    const rightIndex = sizeOrder.indexOf(String(right).toLowerCase());
+
+    if (leftIndex === -1 && rightIndex === -1) {
+      return String(left).localeCompare(String(right), undefined, { numeric: true });
+    }
+
+    if (leftIndex === -1) return 1;
+    if (rightIndex === -1) return -1;
+
+    return leftIndex - rightIndex;
+  });
 }
 
 function firstSentence(text = "") {
