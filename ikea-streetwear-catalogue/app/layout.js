@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata = {
-  title: "Nord Thread | Wear the Mood",
+  title: "Nord Threads | Wear the Mood",
   description: "Soft chaos. Clean fits. Made for quiet wins."
 };
 

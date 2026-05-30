@@ -11,11 +11,11 @@ export async function generateMetadata({ params }) {
   const product = await getProductByHandle(handle);
 
   if (!product) {
-    return { title: "Product not found | Nord Thread" };
+    return { title: "Product not found | Nord Threads" };
   }
 
   return {
-    title: `${product.name} | Nord Thread`,
+    title: `${product.name} | Nord Threads`,
     description: product.description
   };
 }

@@ -31,7 +31,7 @@ const TEST_PRODUCTS_QUERY = `
 `;
 
 export const metadata = {
-  title: "Shopify Test | Nord Thread",
+  title: "Shopify Test | Nord Threads",
   description: "Temporary Shopify Storefront API diagnostic page."
 };
 

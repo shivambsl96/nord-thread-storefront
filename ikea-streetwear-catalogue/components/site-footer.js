@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
           <p className="font-display text-xl font-bold uppercase tracking-[0.16em] text-ink">
-            Nord Thread
+            Nord Threads
           </p>
           <p className="mt-3 max-w-sm text-sm leading-6 text-ink/65">
             Soft chaos. Clean fits. Made for quiet wins.

@@ -23,7 +23,7 @@ export function SiteHeader() {
           </span>
           <div>
             <p className="font-display text-lg font-bold uppercase tracking-[0.16em] text-ink">
-              Nord Thread
+              Nord Threads
             </p>
             <p className="text-xs uppercase tracking-[0.24em] text-ink/55">
               Mindful Wardrobe

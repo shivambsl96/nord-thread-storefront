@@ -35,8 +35,8 @@ const communityPillars = [
 ];
 
 export const metadata = {
-  title: "About | Nord Thread",
-  description: "About Nord Thread, a minimal streetwear brand built around mindset, intention, and positive culture."
+  title: "About | Nord Threads",
+  description: "About Nord Threads, a minimal streetwear brand built around mindset, intention, and positive culture."
 };
 
 export default function AboutPage() {

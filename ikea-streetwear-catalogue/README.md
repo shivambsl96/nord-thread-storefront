@@ -1,4 +1,4 @@
-# Nord Thread Shopify Storefront
+# Nord Threads Shopify Storefront
 
 Headless Shopify storefront built with Next.js and Tailwind CSS. The visual system keeps the existing IKEA-inspired catalogue direction while Shopify becomes the source of truth for products, collections, images, descriptions, prices, variants, availability, cart, and checkout.
 

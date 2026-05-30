@@ -9,11 +9,11 @@ export async function generateMetadata({ params }) {
   const collection = await getCollectionByHandle(handle);
 
   if (!collection) {
-    return { title: "Collection not found | Nord Thread" };
+    return { title: "Collection not found | Nord Threads" };
   }
 
   return {
-    title: `${collection.name} | Nord Thread`,
+    title: `${collection.name} | Nord Threads`,
     description: collection.shortStory
   };
 }

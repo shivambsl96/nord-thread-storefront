@@ -3,8 +3,8 @@ import { SectionHeading } from "@/components/section-heading";
 import { getCatalogueFilters, getProducts } from "@/lib/products";
 
 export const metadata = {
-  title: "Catalogue | Nord Thread",
-  description: "Browse the full Nord Thread product catalogue."
+  title: "Catalogue | Nord Threads",
+  description: "Browse the full Nord Threads product catalogue."
 };
 
 export const dynamic = "force-dynamic";

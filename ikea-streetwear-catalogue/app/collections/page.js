@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getCollections } from "@/lib/products";
 
 export const metadata = {
-  title: "Collections | Nord Thread",
-  description: "Emotional collection and inspiration page for Nord Thread."
+  title: "Collections | Nord Threads",
+  description: "Emotional collection and inspiration page for Nord Threads."
 };
 
 export const dynamic = "force-dynamic";

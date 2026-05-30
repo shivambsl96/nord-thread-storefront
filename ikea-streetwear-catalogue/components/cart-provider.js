@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { addCartLines, createCart, getCart, removeCartLines, updateCartLines } from "@/lib/shopify";
 
 const CartContext = createContext(null);
+const CART_STORAGE_KEY = "nord-threads-cart-id";
+const LEGACY_CART_STORAGE_KEY = "nord-thread-cart-id";
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(null);
@@ -14,7 +16,12 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     let isActive = true;
-    const storedCartId = window.localStorage.getItem("nord-thread-cart-id");
+    const legacyCartId = window.localStorage.getItem(LEGACY_CART_STORAGE_KEY);
+    const storedCartId = window.localStorage.getItem(CART_STORAGE_KEY) || legacyCartId;
+    if (legacyCartId && !window.localStorage.getItem(CART_STORAGE_KEY)) {
+      window.localStorage.setItem(CART_STORAGE_KEY, legacyCartId);
+      window.localStorage.removeItem(LEGACY_CART_STORAGE_KEY);
+    }
     const markReady = () => {
       if (isActive) {
         setIsReady(true);
@@ -33,11 +40,13 @@ export function CartProvider({ children }) {
         if (shopifyCart) {
           setCart(shopifyCart);
         } else {
-          window.localStorage.removeItem("nord-thread-cart-id");
+          window.localStorage.removeItem(CART_STORAGE_KEY);
+          window.localStorage.removeItem(LEGACY_CART_STORAGE_KEY);
         }
       })
       .catch(() => {
-        window.localStorage.removeItem("nord-thread-cart-id");
+        window.localStorage.removeItem(CART_STORAGE_KEY);
+        window.localStorage.removeItem(LEGACY_CART_STORAGE_KEY);
       })
       .finally(markReady);
 
@@ -51,7 +60,7 @@ export function CartProvider({ children }) {
       return;
     }
 
-    window.localStorage.setItem("nord-thread-cart-id", cart.id);
+    window.localStorage.setItem(CART_STORAGE_KEY, cart.id);
   }, [cart?.id, isReady]);
 
   async function addItem(product, selection) {
