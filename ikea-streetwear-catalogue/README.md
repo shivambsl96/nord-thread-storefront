@@ -99,6 +99,6 @@ NEXT_PUBLIC_SHOPIFY_API_VERSION
 NEXT_PUBLIC_SITE_URL
 ```
 
-Shopify handles checkout, payments, orders, taxes, shipping, and order lifecycle through the `checkoutUrl` returned by the Storefront Cart API.
+Shopify handles checkout, payments, orders, taxes, shipping, and order lifecycle through the `checkoutUrl` returned by the Storefront Cart API. If Shopify returns a checkout path on `www.nordthreads.com`, `proxy.js` redirects that Shopify checkout path to `nordthreads.myshopify.com` so Azure does not render the headless storefront 404.
 
 Detailed Terraform and GitHub Actions instructions are in `../infra/azure-static-web-app/README.md`.
