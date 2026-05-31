@@ -40,6 +40,7 @@ Create `.env.local` from `.env.example`:
 NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-storefront-access-token
 NEXT_PUBLIC_SHOPIFY_API_VERSION=2025-01
+NEXT_PUBLIC_SITE_URL=https://www.nordthreads.com
 ```
 
 These are public Storefront API credentials intended for browser storefront use. Never expose Shopify Admin API credentials in this project.
@@ -95,6 +96,7 @@ Set the Shopify environment variables in Azure Static Web Apps application setti
 NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
 NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN
 NEXT_PUBLIC_SHOPIFY_API_VERSION
+NEXT_PUBLIC_SITE_URL
 ```
 
 Shopify handles checkout, payments, orders, taxes, shipping, and order lifecycle through the `checkoutUrl` returned by the Storefront Cart API.

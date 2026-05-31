@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/components/cart-provider";
+import { sitePath } from "@/lib/site-url";
 
 export function CartDrawer() {
   const {
@@ -57,6 +59,13 @@ export function CartDrawer() {
               <p className="mt-3 text-sm leading-6 text-ink/62">
                 Pick your mood.
               </p>
+              <Link
+                href={sitePath("/catalogue")}
+                onClick={() => setIsDrawerOpen(false)}
+                className="mt-5 inline-flex border border-ink bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-ink shadow-[inset_0_-3px_0_#ffcf3f] transition hover:bg-paper"
+              >
+                Continue Shopping
+              </Link>
             </div>
           ) : (
             <div className="space-y-4">

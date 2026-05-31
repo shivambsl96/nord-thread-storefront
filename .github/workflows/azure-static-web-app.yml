@@ -38,6 +38,7 @@ jobs:
           NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN }}
           NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
           NEXT_PUBLIC_SHOPIFY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SHOPIFY_API_VERSION }}
+          NEXT_PUBLIC_SITE_URL: https://www.nordthreads.com
 
   close_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

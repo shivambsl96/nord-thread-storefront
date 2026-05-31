@@ -128,6 +128,7 @@ export function CartProvider({ children }) {
 
   function checkout() {
     if (cart?.checkoutUrl) {
+      // Shopify checkout must stay on the exact Storefront Cart API URL.
       window.location.href = cart.checkoutUrl;
     }
   }
