@@ -131,6 +131,34 @@ const COLLECTION_FRAGMENT = `
   }
 `;
 
+const ARTICLE_FRAGMENT = `
+  fragment ArticleFields on Article {
+    id
+    handle
+    title
+    excerpt
+    excerptHtml
+    content
+    contentHtml
+    publishedAt
+    onlineStoreUrl
+    image {
+      url
+      altText
+      width
+      height
+    }
+    authorV2 {
+      name
+    }
+    blog {
+      id
+      handle
+      title
+    }
+  }
+`;
+
 export async function shopifyFetch({ query, variables = {}, cache = "no-store", tags = [] }) {
   const domain = normalizeStoreDomain(process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN);
   const token = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
@@ -298,6 +326,47 @@ export async function getCollectionByHandle(handle, { productsFirst = 24 } = {})
     ...normalizeCollection(response.data.collection),
     products: toEdges(response.data.collection.products).map(normalizeProduct)
   };
+}
+
+export async function getBlogs({ first = 6, articlesFirst = 6 } = {}) {
+  const query = `
+    ${ARTICLE_FRAGMENT}
+    query Blogs($first: Int!, $articlesFirst: Int!) {
+      blogs(first: $first) {
+        edges {
+          node {
+            id
+            handle
+            title
+            articles(first: $articlesFirst, sortKey: PUBLISHED_AT, reverse: true) {
+              edges {
+                node {
+                  ...ArticleFields
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const response = await shopifyFetch({
+    query,
+    variables: { first, articlesFirst },
+    cache: "no-store",
+    tags: ["blogs"]
+  });
+
+  return toEdges(response.data?.blogs).map(normalizeBlog);
+}
+
+export async function getArticles({ first = 12 } = {}) {
+  const blogs = await getBlogs({ first: 10, articlesFirst: first });
+  return blogs
+    .flatMap((blog) => blog.articles)
+    .sort((left, right) => new Date(right.publishedAt || 0) - new Date(left.publishedAt || 0))
+    .slice(0, first);
 }
 
 export async function createCart(lines = []) {
@@ -653,6 +722,40 @@ function normalizeCollection(collection) {
   };
 }
 
+function normalizeBlog(blog) {
+  return {
+    id: blog.id,
+    handle: blog.handle,
+    title: blog.title,
+    articles: toEdges(blog.articles).map(normalizeArticle)
+  };
+}
+
+function normalizeArticle(article) {
+  const image = normalizeImage(article.image);
+  const excerpt = article.excerpt || stripHtml(article.excerptHtml) || firstSentence(stripHtml(article.contentHtml)) || "";
+
+  return {
+    id: article.id,
+    handle: article.handle,
+    title: article.title,
+    excerpt,
+    content: article.content || stripHtml(article.contentHtml) || "",
+    contentHtml: article.contentHtml || "",
+    publishedAt: article.publishedAt,
+    onlineStoreUrl: article.onlineStoreUrl,
+    author: article.authorV2?.name || "",
+    image,
+    blog: article.blog
+      ? {
+          id: article.blog.id,
+          handle: article.blog.handle,
+          title: article.blog.title
+        }
+      : null
+  };
+}
+
 function normalizeCart(cart) {
   if (!cart) {
     return null;
@@ -765,6 +868,20 @@ function sortSizeValues(values = []) {
 
 function firstSentence(text = "") {
   return text.split(".")[0]?.trim();
+}
+
+function stripHtml(value = "") {
+  return value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, "\"")
+    .replace(/&#39;/g, "'")
+    .replace(/\s+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function tagValue(tags = [], prefix) {

@@ -19,6 +19,7 @@ export function SiteFooter() {
           <div className="mt-3 flex flex-col gap-2 text-sm text-ink/65">
             <Link href="/catalogue">All Products</Link>
             <Link href="/collections">Collections</Link>
+            <Link href="/blogs">Blogs</Link>
             <Link href="/about">About the Brand</Link>
           </div>
         </div>

@@ -6,71 +6,37 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [featuredProducts, collectionCards] = await Promise.all([
-    getFeaturedProducts(3),
+    getFeaturedProducts(6),
     getCollections()
   ]);
 
   return (
     <div>
       <section className="catalogue-shell soft-pattern border-b border-ink/10">
-        <div className="home-hero-grid mx-auto grid max-w-7xl gap-7 px-4 py-8 sm:px-6 lg:grid-cols-[0.5fr,1.5fr] lg:px-8 lg:py-10">
-          <aside className="flex flex-col justify-between gap-6 lg:sticky lg:top-28 lg:self-start">
-            <div className="max-w-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-coral">
-                Soft chaos. Clean fits.
-              </p>
-              <h1 className="mt-3 font-display text-3xl font-bold uppercase leading-[0.95] tracking-[0.05em] text-ink sm:text-4xl">
-                Wear the mood.
-                <br />
-                Stay lowkey.
-              </h1>
-              <p className="mt-3 max-w-md text-sm leading-6 text-ink/68">
-                Low noise. High intent. Tees for better days.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-              <Link
-                href="/catalogue"
-                className="inline-flex items-center justify-center border border-ink bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-ink shadow-[inset_0_-3px_0_#ffcf3f] transition hover:bg-paper"
-              >
-                Browse Catalogue
-              </Link>
-              <Link
-                href="/collections"
-                className="inline-flex items-center justify-center border border-ink/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-ink transition hover:border-ink"
-              >
-                View Collections
-              </Link>
-            </div>
-
-            <div className="space-y-3 border-t border-ink/10 pt-5">
-              <MiniStat label="This season" value="Quiet wins" />
-              <MiniStat label="Products" value={String(featuredProducts.length).padStart(2, "0")} />
-              <MiniStat label="Collections" value={String(collectionCards.length).padStart(2, "0")} />
-            </div>
-          </aside>
-
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
           <div>
-            <div className="mb-4 flex items-end justify-between gap-4">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-coral">
                   Featured products
                 </p>
-                <h2 className="mt-2 font-display text-2xl font-bold uppercase tracking-[0.08em] text-ink sm:text-3xl">
+                <h1 className="mt-2 max-w-3xl font-display text-4xl font-bold uppercase leading-[0.95] tracking-[0.07em] text-ink sm:text-5xl lg:text-6xl">
                   Quietly locked in
-                </h2>
+                </h1>
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-ink/62 sm:text-base">
+                  Low noise. High intent. Clean tees for better days.
+                </p>
               </div>
               <Link
                 href="/catalogue"
-                className="hidden text-xs font-semibold uppercase tracking-[0.18em] text-ink sm:block"
+                className="inline-flex w-fit border border-ink bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-ink shadow-[inset_0_-3px_0_#ffcf3f] transition hover:bg-paper"
               >
                 Shop all products
               </Link>
             </div>
 
             {featuredProducts.length ? (
-              <div className="grid gap-5 md:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
                 {featuredProducts.map((product, index) => (
                   <ProductCard key={product.id} product={product} priority={index < 2} compact />
                 ))}
@@ -147,17 +113,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-
-function MiniStat({ label, value }) {
-  return (
-    <div className="flex items-baseline justify-between gap-5">
-      <p className="text-[10px] uppercase tracking-[0.22em] text-ink/45">{label}</p>
-      <p className="font-display text-lg font-bold uppercase leading-tight tracking-[0.08em] text-ink">
-        {value}
-      </p>
     </div>
   );
 }
