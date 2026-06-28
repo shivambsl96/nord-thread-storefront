@@ -16,8 +16,8 @@ export function ProductDetailClient({ product }) {
   );
   const selectedColor = selectedVariant?.color || selectedOptions.Color || selectedOptions.Colour || "";
   const galleryImages = useMemo(
-    () => filterImagesForColor(product.images, selectedColor, selectedVariant?.image),
-    [product.images, selectedColor, selectedVariant?.image]
+    () => filterImagesForColor(product.images, selectedColor, selectedVariant, product.variants),
+    [product.images, product.variants, selectedColor, selectedVariant]
   );
   const mainImageUrl = useMemo(
     () => resolveMainImageUrl(product, selectedVariant, selectedColor, galleryImages),
@@ -34,7 +34,7 @@ export function ProductDetailClient({ product }) {
     const nextColor = nextVariant?.color || nextOptions.Color || nextOptions.Colour || "";
 
     setSelectedOptions(nextOptions);
-    setSelectedImageUrl(resolveMainImageUrl(product, nextVariant, nextColor));
+    setSelectedImageUrl(resolveMainImageUrl(product, nextVariant, nextColor, filterImagesForColor(product.images, nextColor, nextVariant, product.variants)));
   }
 
   return (
@@ -187,27 +187,55 @@ function findSelectedVariant(variants, selectedOptions) {
 }
 
 function resolveMainImageUrl(product, variant, color, images = product.images ?? []) {
-  if (variant?.image?.url) {
+  const namedColorImage = findColorImage(images, color);
+
+  if (namedColorImage?.url) {
+    return namedColorImage.url;
+  }
+
+  if (variant?.image?.url && imageBelongsToFilteredSet(variant.image, images)) {
     return variant.image.url;
   }
 
-  return findColorImage(images, color)?.url || product.image || images[0]?.url || "";
+  return product.image || images[0]?.url || "";
 }
 
-function filterImagesForColor(images = [], color, variantImage) {
+function filterImagesForColor(images = [], color, variant, variants = []) {
   if (!color) {
     return images;
   }
 
-  const filteredImages = images.filter(
-    (image) => imageMatchesColor(image, color) || imageIsCommon(image)
-  );
+  const colorNamedImages = images.filter((image) => imageMatchesColor(image, color));
+  const commonImages = images.filter(imageIsCommon);
+  const colorCode = variantImageColorCode(variant, variants);
+  const codedImages = colorNamedImages.length
+    ? []
+    : images.filter((image) => imageMatchesColorCode(image, colorCode));
+  const filteredImages = uniqueImages([...colorNamedImages, ...codedImages, ...commonImages]);
+  const variantImage = variantImageIsTrustworthy(variant, variants) ? variant?.image : null;
 
-  if (variantImage?.url && !filteredImages.some((image) => image.url === variantImage.url)) {
+  if (
+    variantImage?.url &&
+    !colorNamedImages.length &&
+    !filteredImages.some((image) => image.url === variantImage.url)
+  ) {
     filteredImages.unshift(variantImage);
   }
 
   return filteredImages.length ? filteredImages : images;
+}
+
+function uniqueImages(images = []) {
+  const seen = new Set();
+
+  return images.filter((image) => {
+    if (!image?.url || seen.has(image.url)) {
+      return false;
+    }
+
+    seen.add(image.url);
+    return true;
+  });
 }
 
 function findColorImage(images = [], color) {
@@ -219,29 +247,104 @@ function findColorImage(images = [], color) {
 }
 
 function imageMatchesColor(image, color) {
-  const colorTokens = tokenize(color);
-  const imageTokens = tokenize(`${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`);
+  const imageText = normalizedImageText(image);
+  const colorPhrases = colorSearchPhrases(color);
 
-  return colorTokens.some((token) => imageTokens.includes(token));
+  return colorPhrases.some((phrase) => textContainsPhrase(imageText, phrase));
 }
 
 function imageIsCommon(image) {
-  const text = `${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`.toLowerCase();
+  const text = normalizedImageText(image);
   return ["size", "chart", "guide", "fit", "detail", "fabric", "label"].some((token) =>
     text.includes(token)
   );
 }
 
-function fileNameFromUrl(url = "") {
-  return String(url).split("/").pop()?.split("?")[0] ?? "";
+function imageBelongsToFilteredSet(image, images = []) {
+  return images.some((item) => item.url === image.url);
 }
 
-function tokenize(value = "") {
+function variantImageIsTrustworthy(variant, variants = []) {
+  if (!variant?.image?.url) {
+    return false;
+  }
+
+  const colorsUsingImage = new Set(
+    variants
+      .filter((item) => item.image?.url === variant.image.url)
+      .map((item) => item.color)
+      .filter(Boolean)
+  );
+
+  return colorsUsingImage.size <= 1;
+}
+
+function variantImageColorCode(variant, variants = []) {
+  if (!variantImageIsTrustworthy(variant, variants)) {
+    return "";
+  }
+
+  return colorCodeFromImage(variant?.image);
+}
+
+function imageMatchesColorCode(image, colorCode) {
+  return Boolean(colorCode) && colorCodeFromImage(image) === colorCode;
+}
+
+function colorCodeFromImage(image) {
+  const text = `${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`;
+  return text.match(/(?:^|[_\-\s])c[_\-\s]*(\d+)(?:[_\-\s.]|$)/i)?.[1] || "";
+}
+
+function normalizedImageText(image) {
+  return normalizeSearchText(`${image?.altText ?? ""} ${fileNameFromUrl(image?.url)}`);
+}
+
+function fileNameFromUrl(url = "") {
+  const fileName = String(url).split("/").pop()?.split("?")[0] ?? "";
+
+  try {
+    return decodeURIComponent(fileName);
+  } catch {
+    return fileName;
+  }
+}
+
+function normalizeSearchText(value = "") {
   return String(value)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
-    .split(" ")
-    .filter(Boolean);
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function colorSearchPhrases(color = "") {
+  const normalizedColor = normalizeSearchText(color);
+  const words = normalizedColor.split(" ").filter(Boolean);
+  const phrases = new Set([normalizedColor]);
+  const compactColorNames = new Set(["pink", "blue", "green", "red", "black", "white", "beige", "cream", "lavender", "mint", "coral", "navy", "olive", "grey", "gray"]);
+
+  if (normalizedColor.includes("pink")) phrases.add("pink");
+  if (normalizedColor.includes("navy blue")) phrases.add("navy blue");
+  if (normalizedColor.includes("baby blue")) phrases.add("baby blue");
+  if (normalizedColor.includes("olive green")) phrases.add("olive green");
+  if (normalizedColor.includes("bottle green")) phrases.add("bottle green");
+  if (normalizedColor.includes("grey melange")) phrases.add("grey");
+  if (normalizedColor.includes("gray melange")) phrases.add("gray");
+
+  words
+    .filter((word) => compactColorNames.has(word))
+    .forEach((word) => phrases.add(word));
+
+  return [...phrases].filter(Boolean);
+}
+
+function textContainsPhrase(text, phrase) {
+  return new RegExp(`(^| )${escapeRegExp(phrase)}( |$)`, "i").test(text);
+}
+
+function escapeRegExp(value = "") {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function formatMoney(amount, currency = "INR") {

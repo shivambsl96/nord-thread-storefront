@@ -54,10 +54,7 @@ export default async function BlogsPage() {
               <h2 className="mt-4 max-w-3xl font-display text-3xl font-bold uppercase leading-tight tracking-[0.07em] text-ink sm:text-4xl">
                 {featuredArticle.title}
               </h2>
-              <ArticleMeta article={featuredArticle} />
-              <p className="mt-5 max-w-2xl text-base leading-8 text-ink/68">
-                {featuredArticle.excerpt}
-              </p>
+              <ArticleBody article={featuredArticle} />
             </article>
           </div>
         ) : (
@@ -82,9 +79,6 @@ export default async function BlogsPage() {
                   <p className="mt-4 line-clamp-3 text-sm leading-7 text-ink/65">
                     {article.excerpt}
                   </p>
-                  <div className="mt-auto pt-6">
-                    <ArticleMeta article={article} compact />
-                  </div>
                 </div>
               </article>
             ))}
@@ -118,16 +112,23 @@ function ArticleVisual({ article, compact = false, priority = false }) {
   );
 }
 
-function ArticleMeta({ article, compact = false }) {
-  const publishedDate = article.publishedAt
-    ? new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(article.publishedAt))
-    : "";
+function ArticleBody({ article }) {
+  const blocks = splitArticleBlocks(article.content || article.excerpt);
 
   return (
-    <p className={`uppercase tracking-[0.18em] text-ink/45 ${compact ? "text-[11px]" : "mt-5 text-xs"}`}>
-      {[publishedDate, article.author].filter(Boolean).join(" / ")}
-    </p>
+    <div className="mt-6 max-w-2xl space-y-5 text-base leading-8 text-ink/68">
+      {blocks.map((block, index) => (
+        <p key={`${block}-${index}`}>{block}</p>
+      ))}
+    </div>
   );
+}
+
+function splitArticleBlocks(text = "") {
+  return String(text)
+    .split(/\n+/)
+    .map((block) => block.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
 }
 
 function EmptyBlogsState({ blogs }) {

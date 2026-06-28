@@ -61,7 +61,7 @@ const PRODUCT_CARD_FRAGMENT = `
       width
       height
     }
-    images(first: 20) {
+    images(first: 80) {
       edges {
         node {
           url
@@ -740,7 +740,7 @@ function normalizeArticle(article) {
     handle: article.handle,
     title: article.title,
     excerpt,
-    content: article.content || stripHtml(article.contentHtml) || "",
+    content: stripHtml(article.contentHtml) || article.content || "",
     contentHtml: article.contentHtml || "",
     publishedAt: article.publishedAt,
     onlineStoreUrl: article.onlineStoreUrl,

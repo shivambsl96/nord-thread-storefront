@@ -106,7 +106,17 @@ Shopify collection membership comes from Shopify. Frontend config only controls 
 
 - `/blogs` renders Shopify blogs/articles through Storefront API.
 - Keep blog pages editorial and brand-native.
+- Render full article content for featured articles, not only excerpts.
+- Do not show author/date metadata unless explicitly requested.
 - Do not link users to Shopify storefront blog pages unless explicitly required.
+
+## Product Image Matching
+
+- Product gallery color filtering must support both explicit color filenames and Printrove-style color codes.
+- Shopify product image queries should fetch enough images for all color sets; do not lower the image limit without checking large products.
+- Explicit filename/alt color names win over Shopify variant images when they conflict.
+- If filenames do not contain color names, use the selected variant image's `c_<number>` code to group matching front/back images.
+- If one variant image URL is shared by multiple colors, treat it as unreliable and fall back to filename/color matching.
 
 ## Deployment
 
